@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useAirbnb } from '../../hooks/useAirbnb'
+import { useZkRent } from '../../hooks/useZkRent'
 import Web3 from 'web3'
 import * as Bytescale from "@bytescale/upload-widget";
 
@@ -10,7 +10,7 @@ const NewListingForm = setShowNewListingModal => {
   const [imgURL, setImgURL] = useState('')
   const [pricePerDay, setPricePerDay] = useState('')
 
-  const { addListing } = useAirbnb()
+  const { addListing } = useZkRent()
 
   const handleUploadPropertyImage = async () => {
     Bytescale.UploadWidget.open({
@@ -29,19 +29,6 @@ const NewListingForm = setShowNewListingModal => {
         alert(error);
       }
     );
-
-    // uploader
-    //   .open({ multi: false })
-    //   .then(files => {
-    //     if (files.length === 0) {
-    //       alert('No files selected.')
-    //     } else {
-    //       setImgURL(files[0].fileUrl)
-    //     }
-    //   })
-    //   .catch(err => {
-    //     console.error(err)
-    //   })
   }
 
   const onCreate = event => {

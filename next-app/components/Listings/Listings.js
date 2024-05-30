@@ -1,8 +1,11 @@
 import ListingItem from './ListingItem'
-import { useAirbnb } from '../../hooks/useAirbnb'
+import { useZkRent } from '../../hooks/useZkRent'
+import { useState } from 'react'
 
 const Listings = ({ setShowReserveListingModal }) => {
-  const { properties } = useAirbnb()
+  const { properties } = useZkRent()
+  const [areaFilter, setAreaFilter] = useState('');
+  const [priceFilter, setPriceFilter] = useState('');
 
   return (
     <div className='px-20'>

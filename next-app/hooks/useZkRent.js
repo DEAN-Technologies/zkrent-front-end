@@ -4,7 +4,7 @@ import toast from 'react-hot-toast'
 
 import { createContract } from '../utils/constants'
 
-export const useAirbnb = () => {
+export const useZkRent = () => {
   const [contract, setContract] = useState(null)
   const [userAddress, setUserAddress] = useState('')
   const [properties, setProperties] = useState([])

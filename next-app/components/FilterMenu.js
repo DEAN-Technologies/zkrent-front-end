@@ -1,12 +1,29 @@
 import Image from 'next/image'
 import { AdjustmentsHorizontalIcon } from '@heroicons/react/24/outline'
+import { useState } from 'react'
+import FilterModal from './Listings/Filter'
 
 function FilterMenu() {
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [filters, setFilters] = useState({
+        price: '',
+        area: '',
+        isAvailable: false,
+    });
+
+    const handleOpenModal = () => {
+        setIsModalOpen(true);
+    };
+
+    const handleCloseModal = () => {
+        setIsModalOpen(false);
+    };
+
+    const handleApplyFilters = (newFilters) => {
+        setFilters(newFilters);
+    };
+
     const menus = [
-        {
-            title: 'OMG!',
-            icon: 'https://a0.muscache.com/pictures/c5a4f6fc-c92c-4ae8-87dd-57f1ff1b89a6.jpg',
-        },
         {
             title: 'Beach',
             icon: 'https://a0.muscache.com/pictures/10ce1091-c854-40f3-a2fb-defc2995bcaf.jpg',
@@ -66,8 +83,9 @@ function FilterMenu() {
                     </div>
                 ))}
             </div>
-            <button className="border rounded-lg p-4 text-xs font-medium flex space-x-2">
+            <button onClick={handleOpenModal} className="border rounded-lg p-4 text-xs font-medium flex space-x-2">
                 <AdjustmentsHorizontalIcon className="h-4 w-4" />
+                <FilterModal isOpen={isModalOpen} onClose={handleCloseModal} onApply={handleApplyFilters} />
                 <span>Filters</span>
             </button>
         </div>

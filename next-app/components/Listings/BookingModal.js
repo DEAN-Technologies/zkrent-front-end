@@ -3,7 +3,7 @@ import { Fragment, useState } from 'react'
 import { DateRangePicker } from 'react-date-range'
 import 'react-date-range/dist/styles.css'
 import 'react-date-range/dist/theme/default.css'
-import { useAirbnb } from '../../hooks/useAirbnb'
+import { useZkRent } from '../../hooks/useZkRent'
 import { useAppContext } from '../../context/context'
 
 const BookingModal = ({
@@ -13,7 +13,7 @@ const BookingModal = ({
   const [startDate, setStartDate] = useState(new Date())
   const [endDate, setEndDate] = useState(new Date())
 
-  const { bookProperty } = useAirbnb()
+  const { bookProperty } = useZkRent()
   const { selectedPropertyId } = useAppContext()
 
   const selectionRange = {

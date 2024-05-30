@@ -6,19 +6,19 @@ import FilterMenu from '../components/FilterMenu'
 import Listings from '../components/Listings/Listings'
 import NewListingModal from '../components/Listings/NewListingModal'
 import BookingModal from '../components/Listings/BookingModal'
-import { useAirbnb } from '../hooks/useAirbnb'
+import { useZkRent } from '../hooks/useZkRent'
 
 export default function Home() {
   const [showReservedListing, setShowReservedListing] = useState(false)
   const [showNewListingModal, setShowNewListingModal] = useState(false)
   const [showReserveListingModal, setShowReserveListingModal] = useState(false)
 
-  const { userAddress } = useAirbnb()
+  const { userAddress } = useZkRent()
 
   return (
     <div>
       <Head>
-        <title>Airbnb Clone</title>
+        <title>ZkRent</title>
       </Head>
 
       <Header />
