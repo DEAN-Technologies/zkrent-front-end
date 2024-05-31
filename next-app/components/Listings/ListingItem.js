@@ -11,7 +11,7 @@ const ListingItem = ({ item, setShowReserveListingModal }) => {
 
   const { address } = useAccount()
 
-  const { setSelectedPropertyId } = useAppContext()
+  const { setSelectedPropertyId, setSelectedPropertyDesc } = useAppContext()
 
   return (
     <div
@@ -21,6 +21,7 @@ const ListingItem = ({ item, setShowReserveListingModal }) => {
         if (item.isBooked) return
         setShowReserveListingModal(true)
         setSelectedPropertyId(item.id)
+        setSelectedPropertyDesc(item.description)
       }}
     >
       <div className='relative h-[22rem] w-auto max-w-[20rem] group'>

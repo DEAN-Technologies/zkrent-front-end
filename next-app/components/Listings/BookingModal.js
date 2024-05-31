@@ -14,7 +14,7 @@ const BookingModal = ({
   const [endDate, setEndDate] = useState(new Date())
 
   const { bookProperty } = useZkRent()
-  const { selectedPropertyId } = useAppContext()
+  const { selectedPropertyId, selectedPropertyDesc } = useAppContext()
 
   const selectionRange = {
     startDate,
@@ -74,12 +74,18 @@ const BookingModal = ({
                 </Dialog.Title>
 
                 <div className='mt-2'>
-                  <DateRangePicker
-                    minDate={new Date()}
-                    rangeColors={['#FD5B61']}
-                    ranges={[selectionRange]}
-                    onChange={handleSelect}
-                  />
+                  <p className='text-sm text-gray-600'>
+                    {selectedPropertyDesc || 'No description provided for this property.'}
+                  </p>
+
+                  <div className='mt-4'>
+                    <DateRangePicker
+                      minDate={new Date()}
+                      rangeColors={['#FD5B61']}
+                      ranges={[selectionRange]}
+                      onChange={handleSelect}
+                    />
+                  </div>
 
                   <div className='mt-4 flex justify-end'>
                     <button
