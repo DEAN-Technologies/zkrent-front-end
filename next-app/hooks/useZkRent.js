@@ -43,6 +43,7 @@ export const useZkRent = () => {
             address: property['propertyAddress'],
             area: property['area'],
             numberOfRooms: property['numberOfRooms'],
+            owner: property['owner'],
           }
 
           setProperties(prevState => [...prevState, formattedProperty])
