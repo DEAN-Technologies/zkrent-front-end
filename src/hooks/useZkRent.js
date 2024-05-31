@@ -65,13 +65,9 @@ export const useZkRent = () => {
   ) => {
     if (contract) {
       try {
-        console.log(address)
         await contract.methods
           .listProperty(name, propertyAddress, description, imgUrl, pricePerDay, numberOfRooms, area)
           .send({ from: address, gas: 3000000, gasLimit: null })
-
-        console.log(numberOfRooms);
-        console.log(area);
 
         getProperties()
       } catch (error) {

@@ -2,6 +2,7 @@ import '../styles/globals.css'
 import { Provider } from '../context/context'
 import '@rainbow-me/rainbowkit/styles.css'
 import { chain, configureChains, createClient, WagmiConfig } from 'wagmi'
+import Modal from 'react-modal'
 
 import {
   getDefaultWallets,
@@ -9,6 +10,8 @@ import {
 } from '@rainbow-me/rainbowkit'
 
 import { infuraProvider } from 'wagmi/providers/infura'
+
+Modal.setAppElement('#__next')
 
 const { chains, provider } = configureChains(
   [chain.sepolia, chain.mainnet, chain.optimism, chain.arbitrum],
