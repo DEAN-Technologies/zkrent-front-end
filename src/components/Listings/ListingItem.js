@@ -134,11 +134,11 @@ const ListingItem = ({ item, setShowReserveListingModal }) => {
                     as='h3'
                     className='text-lg font-medium leading-6 text-gray-900'
                   >
-                    Confirm Deletion
+                    Confirm Unlisting
                   </Dialog.Title>
                   <div className='mt-2'>
                     <p className='text-sm text-gray-600'>
-                      Are you sure you want to delete this listing?
+                      Are you sure you want to unlist this property?
                     </p>
                   </div>
                   <div className='mt-4 flex justify-end space-x-2'>
@@ -154,7 +154,7 @@ const ListingItem = ({ item, setShowReserveListingModal }) => {
                       type='button'
                       className='border rounded-lg px-4 py-2 text-sm font-medium bg-red-500 text-white'
                     >
-                      Delete
+                      Unlist
                     </button>
                   </div>
                 </Dialog.Panel>
