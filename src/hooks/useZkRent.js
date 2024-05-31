@@ -1,6 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
 import { useAccount } from 'wagmi'
-import toast from 'react-hot-toast'
 
 import { createContract } from '../utils/constants'
 
@@ -24,14 +23,11 @@ export const useZkRent = () => {
     if (contract) {
       try {
         const noOfProps = await contract.methods.counter().call()
-        console.log("No of props: ", noOfProps);
 
         setProperties([])
 
         for (let index = 0; index < noOfProps; index++) {
           const property = await contract.methods.properties(index).call()
-
-          console.log("Property:", property);
 
           const formattedProperty = {
             id: index,
@@ -83,15 +79,45 @@ export const useZkRent = () => {
   const bookProperty = async (id, startAt, endAt) => {
     if (contract) {
       try {
-        console.log("\n\n\nBOOOKING", id, startAt, endAt)
         const duePrice = await contract.methods
           .getDuePrice(id, startAt, endAt)
-          .call()
-          ;
+          .call();
 
         await contract.methods.bookProperty(id, startAt, endAt).send({
           from: userAddress,
           value: duePrice,
+          gas: 3000000,
+          gasLimit: null,
+        })
+
+        getProperties()
+      } catch (error) {
+        console.error(error)
+      }
+    }
+  }
+
+  const unlistProperty = async (id) => {
+    if (contract) {
+      try {
+        await contract.methods.unlistProperty(id).send({
+          from: userAddress,
+          gas: 3000000,
+          gasLimit: null,
+        })
+
+        getProperties()
+      } catch (error) {
+        console.error(error)
+      }
+    }
+  }
+
+  const unbookProperty = async (id) => {
+    if (contract) {
+      try {
+        await contract.methods.unBookProperty(id).send({
+          from: userAddress,
           gas: 3000000,
           gasLimit: null,
         })
@@ -109,5 +135,7 @@ export const useZkRent = () => {
     getProperties,
     properties,
     bookProperty,
+    unbookProperty,
+    unlistProperty,
   }
 }

@@ -1,5 +1,5 @@
 import Image from 'next/image'
-import ZkRentLogo from '../public/zkRent.png'
+import ZkRentLogo from '../public/images/zkRent.png'
 import { ConnectButton } from '@rainbow-me/rainbowkit'
 import { GlobeAmericasIcon, MagnifyingGlassIcon } from '@heroicons/react/24/solid'
 import { useAccount } from 'wagmi'

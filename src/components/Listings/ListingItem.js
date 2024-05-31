@@ -7,6 +7,7 @@ import { BackspaceIcon } from '@heroicons/react/24/outline'
 import { useAccount } from 'wagmi'
 import { useAppContext } from '../../context/context'
 import { Dialog, Transition } from '@headlessui/react'
+import { useZkRent } from '../../hooks/useZkRent'
 
 const ListingItem = ({ item, setShowReserveListingModal }) => {
   const [priceInEth] = useState(Web3.utils.fromWei(item.pricePerDay))
@@ -15,6 +16,8 @@ const ListingItem = ({ item, setShowReserveListingModal }) => {
 
   const { address } = useAccount()
   const { setSelectedPropertyId, setSelectedPropertyDesc } = useAppContext()
+
+  const { unbookProperty, unlistProperty } = useZkRent()
 
   const openDeleteConfirmation = (event) => {
     event.stopPropagation()
@@ -27,12 +30,11 @@ const ListingItem = ({ item, setShowReserveListingModal }) => {
   }
 
   const handleDelete = () => {
-    // TODO: Add delete logic
+    unlistProperty(item.id)
     closeDeleteConfirmation()
   }
 
   const openUnbookConfirmation = (event) => {
-    console.log(item.isBooked);
     event.stopPropagation()
     setSelectedPropertyId(item.id)
     setShowUnbookConfirmation(true)
@@ -43,7 +45,7 @@ const ListingItem = ({ item, setShowReserveListingModal }) => {
   }
 
   const handleUnbook = () => {
-    // TODO: Add unbook logic
+    unbookProperty(item.id)
     closeUnbookConfirmation()
   }
 
@@ -127,6 +129,8 @@ const ListingItem = ({ item, setShowReserveListingModal }) => {
           )}
         </div>
       </div>
+
+      {/* Bruh, refactor this please */}
 
       <Transition appear show={showDeleteConfirmation} as={Fragment}>
         <Dialog as='div' className='relative z-50' onClose={closeDeleteConfirmation}>
