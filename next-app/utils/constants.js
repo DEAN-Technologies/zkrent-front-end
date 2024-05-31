@@ -1,7 +1,7 @@
-import ContractABI from './Airbnb.json'
+import ContractABI from './abi.json'
 import Web3 from 'web3'
 
-export const address = '0x23d852fd413a046a9fa166ea55917bc7f536db67'
+export const address = '0x66439c05E739151C85429c483932121b9caC28Fb'
 
 export const createContract = () => {
   const { ethereum } = window

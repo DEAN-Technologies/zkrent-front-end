@@ -13,6 +13,25 @@ export default function Home() {
   const [showNewListingModal, setShowNewListingModal] = useState(false)
   const [showReserveListingModal, setShowReserveListingModal] = useState(false)
 
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [filters, setFilters] = useState({
+    price: '',
+    area: '',
+    isAvailable: false,
+  });
+
+  const handleOpenModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+  };
+
+  const handleApplyFilters = (newFilters) => {
+    setFilters(newFilters);
+  };
+
   const { userAddress } = useZkRent()
 
   return (

@@ -4,8 +4,6 @@ import { useState } from 'react'
 
 const Listings = ({ setShowReserveListingModal }) => {
   const { properties } = useZkRent()
-  const [areaFilter, setAreaFilter] = useState('');
-  const [priceFilter, setPriceFilter] = useState('');
 
   return (
     <div className='px-20'>

@@ -30,44 +30,50 @@ const ListingItem = ({ item, setShowReserveListingModal }) => {
               className='h-full w-full rounded-xl object-cover'
               src={item.imgUrl}
               layout='fill'
+              alt={`Image of ${item.name}`}
             />
           </div>
         </div>
 
         {address && (
-          <div className=' transition-all duration-150 absolute top-4 right-4 flex space-x-2'>
+          <div className='transition-all duration-150 absolute top-4 right-4 flex space-x-2'>
             <HeartIcon
-              className={`w-6 h-6 text-white  ${
-                item.isBooked ? 'fill-red-500' : 'opacity-80'
-              }`}
+              className={`w-6 h-6 text-white  ${item.isBooked ? 'fill-red-500' : 'opacity-80'}`}
             />
           </div>
         )}
       </div>
 
-      <div>
+      <div className='space-y-1'>
         <div className='flex justify-between items-center'>
           <h3 className='font-medium'>{item.name}</h3>
           <div className='flex items-center space-x-1'>
-            <StarIcon className='h-3 w-3' />
-            <p className='text-sm text-gray-800'>{4.8}</p>
+            <StarIcon className='h-3 w-3 text-yellow-500' />
+            <p className='text-sm text-gray-800'>4.8</p>
           </div>
         </div>
 
-        <p className='text-sm font-light text-gray-600'>{788} miles</p>
+        <p className='text-sm font-light text-gray-600'>{788} miles away</p>
         <p className='text-sm font-light text-gray-600'>{item.address}</p>
 
+        <div className='flex space-x-4 mt-2'>
+          <div className='flex items-center space-x-1'>
+            <span className='text-sm font-medium text-gray-700'>Area:</span>
+            <span className='text-sm text-gray-600'>{item.area} sq ft</span>
+          </div>
+          <div className='flex items-center space-x-1'>
+            <span className='text-sm font-medium text-gray-700'>Rooms:</span>
+            <span className='text-sm text-gray-600'>{item.numberOfRooms}</span>
+          </div>
+        </div>
+
         {item.isBooked ? (
-          <div>Property Unavailable</div>
+          <div className='text-red-500 text-sm font-medium mt-2'>Property Unavailable</div>
         ) : (
-          <>
-            <p className='text-sm font-light text-gray-800 mt-2'>
-              <span className='text-base font-medium'>
-                ETH {priceInEth.toLocaleString('en-US')}
-              </span>
-              &nbsp;night
-            </p>
-          </>
+          <p className='text-sm font-light text-gray-800 mt-2'>
+            <span className='text-base font-medium'>ETH {priceInEth.toLocaleString('en-US')}</span>
+            &nbsp;/ night
+          </p>
         )}
       </div>
     </div>

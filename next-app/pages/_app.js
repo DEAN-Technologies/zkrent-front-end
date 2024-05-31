@@ -9,18 +9,11 @@ import {
 } from '@rainbow-me/rainbowkit'
 
 import { infuraProvider } from 'wagmi/providers/infura'
-import { jsonRpcProvider } from 'wagmi/providers/jsonRpc'
 
 const { chains, provider } = configureChains(
-  [chain.sepolia, chain.localhost],
+  [chain.sepolia, chain.mainnet, chain.optimism, chain.arbitrum],
   [
     infuraProvider({ apiKey: process.env.INFURA_API_KEY, priority: 1 }),
-    jsonRpcProvider({
-      priority: 2,
-      rpc: chain => ({
-        http: `HTTP://127.0.0.1:7545`,
-      }),
-    }),
   ],
 )
 

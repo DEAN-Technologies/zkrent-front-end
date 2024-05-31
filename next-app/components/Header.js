@@ -40,9 +40,8 @@ const Header = ({
             >
               Any week
             </p>
-            <p className='text-gray-600 bg-transparent text-sm font-light px-4'>
-              Search
-            </p>
+            <input className='text-gray-600 bg-transparent text-sm font-light px-4' placeholder='Search' />
+
           </div>
           <MagnifyingGlassIcon className='h-8 w-8 bg-[#CB6CE6] text-white stroke-[3.5px] p-2 rounded-full' />
         </button>

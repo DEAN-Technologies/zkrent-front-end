@@ -29,6 +29,7 @@ export const useZkRent = () => {
 
         for (let index = 0; index < noOfProps; index++) {
           const property = await contract.methods.properties(index).call()
+          console.log(property);
 
           const formattedProperty = {
             id: property['id'],
@@ -40,6 +41,8 @@ export const useZkRent = () => {
             pricePerDay: property['pricePerDay'],
             isBooked: property['isBooked'],
             address: property['propertyAddress'],
+            area: property['area'],
+            numberOfRooms: property['numberOfRooms'],
           }
 
           setProperties(prevState => [...prevState, formattedProperty])
@@ -56,13 +59,18 @@ export const useZkRent = () => {
     description,
     imgUrl,
     pricePerDay,
+    numberOfRooms,
+    area,
   ) => {
     if (contract) {
       try {
         console.log(address)
         await contract.methods
-          .listProperty(name, propertyAddress, description, imgUrl, pricePerDay)
+          .listProperty(name, propertyAddress, description, imgUrl, pricePerDay, numberOfRooms, area)
           .send({ from: address, gas: 3000000, gasLimit: null })
+
+        console.log(numberOfRooms);
+        console.log(area);
 
         getProperties()
       } catch (error) {

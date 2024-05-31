@@ -3,12 +3,14 @@ import { useZkRent } from '../../hooks/useZkRent'
 import Web3 from 'web3'
 import * as Bytescale from "@bytescale/upload-widget";
 
-const NewListingForm = setShowNewListingModal => {
+const NewListingForm = ({ setShowNewListingModal }) => {
   const [name, setName] = useState('')
   const [propertyAddress, setPropertyAddress] = useState('')
   const [description, setDescription] = useState('')
   const [imgURL, setImgURL] = useState('')
   const [pricePerDay, setPricePerDay] = useState('')
+  const [numberOfRooms, setNumberOfRooms] = useState('')
+  const [area, setArea] = useState('')
 
   const { addListing } = useZkRent()
 
@@ -37,7 +39,7 @@ const NewListingForm = setShowNewListingModal => {
     const priceInWei = Web3.utils.toWei(pricePerDay, 'ether')
     console.log(priceInWei)
 
-    addListing(name, propertyAddress, description, imgURL, priceInWei)
+    addListing(name, propertyAddress, description, imgURL, priceInWei, numberOfRooms, area)
   }
 
   const styles = {
@@ -46,6 +48,13 @@ const NewListingForm = setShowNewListingModal => {
     formInputContainer: `flex flex-col border rounded-lg px-3 py-2`,
     inputLabel: `text-xs font-light`,
     input: `outline-none bg-transparent text-sm pt-1`,
+    roomSelectionContainer: `flex justify-between`,
+    roomBox: `cursor-pointer border rounded-lg px-3 py-2 text-sm`,
+    activeRoomBox: `bg-blue-500 text-white`,
+  }
+
+  const handleRoomSelection = (rooms) => {
+    setNumberOfRooms(rooms);
   }
 
   return (
@@ -68,6 +77,30 @@ const NewListingForm = setShowNewListingModal => {
             className={styles.input}
           />
         </label>
+
+        <label className={styles.formInputContainer}>
+          <span className={styles.inputLabel}>Area (sq. ft.)</span>
+          <input
+            onChange={event => setArea(event.target.value)}
+            value={area}
+            className={styles.input}
+          />
+        </label>
+
+        <div className={styles.formInputContainer}>
+          <span className={styles.inputLabel}>Number of Rooms</span>
+          <div className={styles.roomSelectionContainer}>
+            {[1, 2, 3, 4, 5].map((room) => (
+              <div
+                key={room}
+                onClick={() => handleRoomSelection(room)}
+                className={`${styles.roomBox} ${numberOfRooms === room ? styles.activeRoomBox : ''}`}
+              >
+                {room}{room === 5 ? '+' : ''}
+              </div>
+            ))}
+          </div>
+        </div>
 
         <label className={styles.formInputContainer}>
           <span className={styles.inputLabel}>Description</span>
@@ -96,7 +129,7 @@ const NewListingForm = setShowNewListingModal => {
         <button
           onClick={onCreate}
           disabled={
-            !name || !propertyAddress || !description || !imgURL || !pricePerDay
+            !name || !propertyAddress || !imgURL || !pricePerDay || !area || !numberOfRooms
           }
           type='button'
           className='border rounded-lg px-4 py-2 text-sm font-medium'
