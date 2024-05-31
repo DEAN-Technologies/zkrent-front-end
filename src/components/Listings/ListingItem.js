@@ -91,8 +91,10 @@ const ListingItem = ({ item, setShowReserveListingModal }) => {
             </div>
           </div>
 
-          {item.isBooked ? (
-            <div className='text-red-500 text-sm font-medium mt-2'>Property Unavailable</div>
+          {!item.isActive ? (
+            <div className='text-gray-500 text-sm font-medium mt-2'>Property is inactive</div>
+          ) : item.isBooked ? (
+            <div className='text-red-500 text-sm font-medium mt-2'>Property is booked</div>
           ) : (
             <p className='text-sm font-light text-gray-800 mt-2'>
               <span className='text-base font-medium'>ETH {priceInEth.toLocaleString('en-US')}</span>

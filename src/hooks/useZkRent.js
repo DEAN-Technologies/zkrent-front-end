@@ -24,22 +24,25 @@ export const useZkRent = () => {
     if (contract) {
       try {
         const noOfProps = await contract.methods.counter().call()
+        console.log("No of props: ", noOfProps);
 
         setProperties([])
 
         for (let index = 0; index < noOfProps; index++) {
           const property = await contract.methods.properties(index).call()
-          console.log(property);
+
+          console.log("Property:", property);
 
           const formattedProperty = {
-            id: property['id'],
+            id: index,
             name: property['name'],
             lat: property['lat'],
             long: property['long'],
             description: property['description'],
             imgUrl: property['imgUrl'],
             pricePerDay: property['pricePerDay'],
-            isBooked: property['isBooked'],
+            isBooked: property['quest'] !== "0x0000000000000000000000000000000000000000",
+            isActive: property['isActive'],
             address: property['propertyAddress'],
             area: property['area'],
             numberOfRooms: property['numberOfRooms'],
@@ -79,9 +82,11 @@ export const useZkRent = () => {
   const bookProperty = async (id, startAt, endAt) => {
     if (contract) {
       try {
+        console.log("\n\n\nBOOOKING", id, startAt, endAt)
         const duePrice = await contract.methods
           .getDuePrice(id, startAt, endAt)
           .call()
+          ;
 
         await contract.methods.bookProperty(id, startAt, endAt).send({
           from: userAddress,
