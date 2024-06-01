@@ -3,6 +3,10 @@ import { useAccount } from 'wagmi'
 
 import { createContract } from '../utils/constants'
 
+const zeroAddress = "0x0000000000000000000000000000000000000000"
+const seed = 777
+const mod = 937
+
 export const useZkRent = () => {
   const [contract, setContract] = useState(null)
   const [userAddress, setUserAddress] = useState('')
@@ -32,18 +36,17 @@ export const useZkRent = () => {
           const formattedProperty = {
             id: index,
             name: property['name'],
-            lat: property['lat'],
-            long: property['long'],
             description: property['description'],
             imgUrl: property['imgUrl'],
             pricePerDay: property['pricePerDay'],
-            isBooked: property['guest'] !== "0x0000000000000000000000000000000000000000",
+            isBooked: property['guest'] !== zeroAddress,
             isActive: property['isActive'],
             guest: property['guest'],
             address: property['propertyAddress'],
             area: property['area'],
             numberOfRooms: property['numberOfRooms'],
             owner: property['owner'],
+            distance: ((index + 42) ** 2 + seed) % mod, // Don't ask what is going on here
           }
 
           setProperties(prevState => [...prevState, formattedProperty])

@@ -17,7 +17,7 @@ function Footer() {
           <p className='text-sm font-light'>English (US)</p>
         </div>
         <div className='flex space-x-2'>
-          <p className='text-sm font-light'>USD</p>
+          <p className='text-sm font-light'>ETH</p>
         </div>
         <div>
           <p className='text-sm font-light'>Support & resources</p>

@@ -6,11 +6,13 @@ import { useAccount } from 'wagmi'
 import { useEffect, useState } from 'react'
 import QRCode from 'qrcode.react'
 import Modal from 'react-modal'
+import { useAppContext } from '../context/context'
 
 const Header = () => {
   const [domLoaded, setDomLoaded] = useState(false)
   const [modalIsOpen, setModalIsOpen] = useState(false)
   const { address } = useAccount()
+  const { setSearchText } = useAppContext()
 
   useEffect(() => {
     setDomLoaded(true)
@@ -36,7 +38,7 @@ const Header = () => {
               <p className='text-gray-800 bg-transparent text-sm font-medium px-4' type='text'>
                 Any week
               </p>
-              <input className='text-gray-600 bg-transparent text-sm font-light px-4' placeholder='Search' />
+              <input onChange={event => setSearchText(event.target.value)} className='text-gray-600 bg-transparent text-sm font-light px-4' placeholder='Search' />
             </div>
             <MagnifyingGlassIcon className='h-8 w-8 bg-[#CB6CE6] text-white stroke-[3.5px] p-2 rounded-full' />
           </button>

@@ -75,10 +75,10 @@ const ListingItem = ({ item, setShowReserveListingModal }) => {
 
           {address && (
             <div className='transition-all duration-150 absolute top-4 right-4 flex space-x-2'>
-              <HeartIcon
+              {item.isActive && <HeartIcon
                 className={`w-6 h-6 text-white ${item.isBooked ? 'fill-red-500' : 'opacity-80'}`}
-              />
-              {item.owner === address && (
+              />}
+              {item.isActive && item.owner === address && (
                 <TrashIcon
                   onClick={openDeleteConfirmation}
                   className='w-6 h-6 text-white cursor-pointer hover:opacity-80'
@@ -103,7 +103,7 @@ const ListingItem = ({ item, setShowReserveListingModal }) => {
             </div>
           </div>
 
-          <p className='text-sm font-light text-gray-600'>{788} miles away</p>
+          <p className='text-sm font-light text-gray-600'>{item.distance} miles away</p>
           <p className='text-sm font-light text-gray-600'>{item.address}</p>
 
           <div className='flex space-x-4 mt-2'>
