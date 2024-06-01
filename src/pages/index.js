@@ -8,12 +8,14 @@ import NewListingModal from '../components/Listings/NewListingModal'
 import BookingModal from '../components/Listings/BookingModal'
 import { useZkRent } from '../hooks/useZkRent'
 import { useAppContext } from '../context/context'
+import useMessages from '../hooks/useMessages'
 
 export default function Home() {
   const [showNewListingModal, setShowNewListingModal] = useState(false)
   const [showReserveListingModal, setShowReserveListingModal] = useState(false)
 
   const { userAddress } = useZkRent()
+  const messages = useMessages()
 
   return (
     <div>
@@ -31,7 +33,7 @@ export default function Home() {
               onClick={() => setShowNewListingModal(true)}
               className='border rounded-lg p-4 text-xs font-medium'
             >
-              Add Listing
+              {messages.addListing}
             </button>
           </div>
         )}

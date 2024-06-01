@@ -1,9 +1,11 @@
 import { Dialog, Transition } from '@headlessui/react'
-import { Fragment, useState } from 'react'
-
+import { Fragment } from 'react'
 import NewListingForm from './NewListingForm'
+import useMessages from '../../hooks/useMessages'
 
 const NewListingModal = ({ showNewListingModal, setShowNewListingModal }) => {
+  const messages = useMessages()
+
   return (
     <Transition appear show={showNewListingModal} as={Fragment}>
       <Dialog
@@ -39,7 +41,7 @@ const NewListingModal = ({ showNewListingModal, setShowNewListingModal }) => {
                   as='h3'
                   className='text-lg font-medium leading-6 text-gray-900'
                 >
-                  Add Listing
+                  {messages.addListing}
                 </Dialog.Title>
                 <NewListingForm
                   setShowNewListingModal={setShowNewListingModal}
