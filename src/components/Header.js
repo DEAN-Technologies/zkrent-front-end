@@ -5,9 +5,9 @@ import { GlobeAmericasIcon, MagnifyingGlassIcon } from '@heroicons/react/24/soli
 import { useAccount } from 'wagmi'
 import { useEffect, useState, Fragment } from 'react'
 import QRCode from 'qrcode.react'
-import Modal from 'react-modal'
 import { Dialog, Transition } from '@headlessui/react'
 import { useAppContext } from '../context/context'
+import useMessages from '../hooks/useMessages'
 
 const Header = () => {
   const [domLoaded, setDomLoaded] = useState(false)
@@ -15,6 +15,7 @@ const Header = () => {
   const [languageModalIsOpen, setLanguageModalIsOpen] = useState(false)
   const { address } = useAccount()
   const { setSearchText, setLanguage, language } = useAppContext()
+  const messages = useMessages().header
 
   useEffect(() => {
     setDomLoaded(true)
@@ -43,12 +44,12 @@ const Header = () => {
           <button className='flex-1 flex items-center justify-between border rounded-full p-2 w-[300px] shadow-sm hover:shadow-md transition-all'>
             <div className='flex items-center divide-x'>
               <p className='text-gray-800 bg-transparent text-sm font-medium px-4' type='text'>
-                Anywhere
+                {messages.anywhere}
               </p>
               <p className='text-gray-800 bg-transparent text-sm font-medium px-4' type='text'>
-                Any week
+                {messages.anyWeek}
               </p>
-              <input onChange={event => setSearchText(event.target.value)} className='text-gray-600 bg-transparent text-sm font-light px-4' placeholder='Search' />
+              <input onChange={event => setSearchText(event.target.value)} className='text-gray-600 bg-transparent text-sm font-light px-4' placeholder={messages.searchPlaceholder} />
             </div>
             <MagnifyingGlassIcon className='h-8 w-8 bg-[#CB6CE6] text-white stroke-[3.5px] p-2 rounded-full' />
           </button>
@@ -61,7 +62,7 @@ const Header = () => {
                 className='text-sm font-medium transition-all duration-300 text-gray-800'
                 onClick={openKycModal}
               >
-                Pass the KYC
+                {messages.passKyc}
               </button>
             )}
           </div>
@@ -75,23 +76,53 @@ const Header = () => {
       </header>
 
       {domLoaded && address && (
-        <Modal
-          isOpen={kycModalIsOpen}
-          onRequestClose={closeKycModal}
-          contentLabel='KYC Modal'
-          className='fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50'
-        >
-          <div className='bg-white p-6 rounded-lg shadow-lg flex flex-col items-center'>
-            <h2 className='text-xl font-bold mb-4'>Scan this QR Code to Pass the KYC</h2>
-            <QRCode value={address} size={256} />
-            <button
-              onClick={closeKycModal}
-              className='mt-4 bg-[#CB6CE6] text-white px-4 py-2 rounded'
+        <Transition appear show={kycModalIsOpen} as={Fragment}>
+          <Dialog as='div' className='relative z-50' onClose={closeKycModal}>
+            <Transition.Child
+              as={Fragment}
+              enter='ease-out duration-300'
+              enterFrom='opacity-0'
+              enterTo='opacity-100'
+              leave='ease-in duration-200'
+              leaveFrom='opacity-100'
+              leaveTo='opacity-0'
             >
-              Close
-            </button>
-          </div>
-        </Modal>
+              <div className='fixed inset-0 bg-black bg-opacity-50' />
+            </Transition.Child>
+
+            <div className='fixed inset-0 overflow-y-auto'>
+              <div className='flex min-h-full items-center justify-center p-4 text-center'>
+                <Transition.Child
+                  as={Fragment}
+                  enter='ease-out duration-300'
+                  enterFrom='opacity-0 scale-95'
+                  enterTo='opacity-100 scale-100'
+                  leave='ease-in duration-200'
+                  leaveFrom='opacity-100 scale-100'
+                  leaveTo='opacity-0 scale-95'
+                >
+                  <Dialog.Panel className='w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all'>
+                    <Dialog.Title
+                      as='h3'
+                      className='text-lg font-medium leading-6 text-gray-900'
+                    >
+                      {messages.scanQr}
+                    </Dialog.Title>
+                    <QRCode value={address} size={256} />
+                    <div className='mt-4 flex justify-end'>
+                      <button
+                        onClick={closeKycModal}
+                        className='bg-[#CB6CE6] text-white px-4 py-2 rounded'
+                      >
+                        {messages.close}
+                      </button>
+                    </div>
+                  </Dialog.Panel>
+                </Transition.Child>
+              </div>
+            </div>
+          </Dialog>
+        </Transition>
       )}
 
       <Transition appear show={languageModalIsOpen} as={Fragment}>
@@ -139,7 +170,7 @@ const Header = () => {
                       onClick={closeLanguageModal}
                       className='text-gray-800 px-2 py-1 rounded'
                     >
-                      Close
+                      {messages.close}
                     </button>
                   </div>
                 </Dialog.Panel>
@@ -152,4 +183,4 @@ const Header = () => {
   )
 }
 
-export default Header;
+export default Header

@@ -10,10 +10,6 @@ const nextConfig = {
       't4.ftcdn.net',
     ],
   },
-  i18n: {
-    locales: ['en', 'ua'],
-    defaultLocale: 'en',
-  },
 }
 
-export default nextConfig
+module.exports = nextConfig
