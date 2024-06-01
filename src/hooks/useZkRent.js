@@ -116,11 +116,32 @@ export const useZkRent = () => {
     }
   }
 
-  const unbookProperty = async (id) => {
+  const unbookPropertyByGuest = async (id) => {
     if (contract) {
       try {
-        await contract.methods.unBookProperty(id).send({
+        await contract.methods.unBookPropertyByGuest(id).send({
           from: userAddress,
+          gas: 3000000,
+          gasLimit: null,
+        })
+
+        getProperties()
+      } catch (error) {
+        console.error(error)
+      }
+    }
+  }
+
+  const unbookPropertyByOwner = async (id) => {
+    if (contract) {
+      const refundPrice = await contract.methods
+        .getPropertyRentPrice(id)
+        .call();
+
+      try {
+        await contract.methods.unBookPropertyByOwner(id).send({
+          from: userAddress,
+          value: refundPrice,
           gas: 3000000,
           gasLimit: null,
         })
@@ -138,7 +159,8 @@ export const useZkRent = () => {
     getProperties,
     properties,
     bookProperty,
-    unbookProperty,
+    unbookPropertyByGuest,
+    unbookPropertyByOwner,
     unlistProperty,
   }
 }

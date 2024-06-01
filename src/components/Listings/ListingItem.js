@@ -17,7 +17,7 @@ const ListingItem = ({ item, setShowReserveListingModal }) => {
   const { address } = useAccount()
   const { setSelectedPropertyId, setSelectedPropertyDesc } = useAppContext()
 
-  const { unbookProperty, unlistProperty } = useZkRent()
+  const { unbookPropertyByGuest, unbookPropertyByOwner, unlistProperty } = useZkRent()
 
   const openDeleteConfirmation = (event) => {
     event.stopPropagation()
@@ -45,7 +45,14 @@ const ListingItem = ({ item, setShowReserveListingModal }) => {
   }
 
   const handleUnbook = () => {
-    unbookProperty(item.id)
+    if (!address) return;
+
+    if (item.guest === address) {
+      unbookPropertyByGuest(item.id)
+    } else if (item.owner === address) {
+      unbookPropertyByOwner(item.id)
+    }
+
     closeUnbookConfirmation()
   }
 
@@ -75,10 +82,10 @@ const ListingItem = ({ item, setShowReserveListingModal }) => {
 
           {address && (
             <div className='transition-all duration-150 absolute top-4 right-4 flex space-x-2'>
-              {item.isActive && <HeartIcon
+              {item.isActive && item.guest === address && <HeartIcon
                 className={`w-6 h-6 text-white ${item.isBooked ? 'fill-red-500' : 'opacity-80'}`}
               />}
-              {item.isActive && item.owner === address && (
+              {!item.isBooked && item.isActive && item.owner === address && (
                 <TrashIcon
                   onClick={openDeleteConfirmation}
                   className='w-6 h-6 text-white cursor-pointer hover:opacity-80'
