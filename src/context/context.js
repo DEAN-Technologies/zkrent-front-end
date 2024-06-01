@@ -16,9 +16,10 @@ export const Provider = ({ children }) => {
     isBookedByMe: false,
     maxDistance: '',
   });
+  const [language, setLanguage] = useState('en')
 
   return (
-    <appContext.Provider value={{ selectedPropertyId, setSelectedPropertyId, selectedPropertyDesc, setSelectedPropertyDesc, searchText, setSearchText, filters, setFilters }}>
+    <appContext.Provider value={{ selectedPropertyId, setSelectedPropertyId, selectedPropertyDesc, setSelectedPropertyDesc, searchText, setSearchText, filters, setFilters, language, setLanguage }}>
       {children}
     </appContext.Provider>
   )

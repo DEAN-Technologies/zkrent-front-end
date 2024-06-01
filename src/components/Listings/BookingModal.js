@@ -1,43 +1,45 @@
-import { Dialog, Transition } from '@headlessui/react'
-import { Fragment, useState } from 'react'
-import { DateRangePicker } from 'react-date-range'
-import 'react-date-range/dist/styles.css'
-import 'react-date-range/dist/theme/default.css'
-import { useZkRent } from '../../hooks/useZkRent'
-import { useAppContext } from '../../context/context'
+import { Dialog, Transition } from '@headlessui/react';
+import { Fragment, useState } from 'react';
+import { DateRangePicker } from 'react-date-range';
+import 'react-date-range/dist/styles.css';
+import 'react-date-range/dist/theme/default.css';
+import { useZkRent } from '../../hooks/useZkRent';
+import { useAppContext } from '../../context/context';
+import useMessages from '../../hooks/useMessages';
 
 const BookingModal = ({
   showReserveListingModal,
   setShowReserveListingModal,
 }) => {
-  const [startDate, setStartDate] = useState(new Date())
-  const [endDate, setEndDate] = useState(new Date())
+  const [startDate, setStartDate] = useState(new Date());
+  const [endDate, setEndDate] = useState(new Date());
 
-  const { bookProperty } = useZkRent()
-  const { selectedPropertyId, selectedPropertyDesc } = useAppContext()
+  const { bookProperty } = useZkRent();
+  const { selectedPropertyId, selectedPropertyDesc } = useAppContext();
+  const messages = useMessages();
 
   const selectionRange = {
     startDate,
     endDate,
     key: 'selection',
-  }
+  };
 
   const handleSelect = ranges => {
-    setStartDate(new Date(ranges.selection.startDate).getTime())
-    setEndDate(new Date(ranges.selection.endDate).getTime())
-  }
+    setStartDate(new Date(ranges.selection.startDate).getTime());
+    setEndDate(new Date(ranges.selection.endDate).getTime());
+  };
 
   const closeModal = () => {
-    setShowReserveListingModal(false)
-  }
+    setShowReserveListingModal(false);
+  };
 
   const onConfirm = event => {
-    event.preventDefault()
+    event.preventDefault();
 
-    bookProperty(selectedPropertyId, startDate, endDate)
+    bookProperty(selectedPropertyId, startDate, endDate);
 
-    closeModal()
-  }
+    closeModal();
+  };
 
   return (
     <Transition appear show={showReserveListingModal} as={Fragment}>
@@ -70,12 +72,12 @@ const BookingModal = ({
                   as='h3'
                   className='text-lg font-medium leading-6 text-gray-900'
                 >
-                  Reserve Listing
+                  {messages.reserveListing}
                 </Dialog.Title>
 
                 <div className='mt-2'>
                   <p className='text-sm text-gray-600'>
-                    {selectedPropertyDesc || 'No description provided for this property.'}
+                    {selectedPropertyDesc || messages.noDescription}
                   </p>
 
                   <div className='mt-4'>
@@ -93,7 +95,7 @@ const BookingModal = ({
                       type='button'
                       className='border rounded-lg px-4 py-2 text-sm font-medium'
                     >
-                      Confirm
+                      {messages.confirm}
                     </button>
                   </div>
                 </div>
@@ -103,7 +105,7 @@ const BookingModal = ({
         </div>
       </Dialog>
     </Transition>
-  )
-}
+  );
+};
 
-export default BookingModal
+export default BookingModal;

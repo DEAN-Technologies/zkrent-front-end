@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useZkRent } from '../../hooks/useZkRent'
 import Web3 from 'web3'
 import * as Bytescale from "@bytescale/upload-widget";
+import useMessages from '../../hooks/useMessages'
 
 const NewListingForm = ({ setShowNewListingModal }) => {
   const [name, setName] = useState('')
@@ -13,6 +14,7 @@ const NewListingForm = ({ setShowNewListingModal }) => {
   const [area, setArea] = useState('')
 
   const { addListing } = useZkRent()
+  const messages = useMessages()
 
   const handleUploadPropertyImage = async () => {
     Bytescale.UploadWidget.open({
@@ -63,7 +65,7 @@ const NewListingForm = ({ setShowNewListingModal }) => {
     <div className={styles.wrapper}>
       <div className={styles.formWrapper}>
         <label className={styles.formInputContainer}>
-          <span className={styles.inputLabel}>Name</span>
+          <span className={styles.inputLabel}>{messages.name}</span>
           <input
             onChange={event => setName(event.target.value)}
             value={name}
@@ -72,7 +74,7 @@ const NewListingForm = ({ setShowNewListingModal }) => {
         </label>
 
         <label className={styles.formInputContainer}>
-          <span className={styles.inputLabel}>Address</span>
+          <span className={styles.inputLabel}>{messages.address}</span>
           <input
             onChange={event => setPropertyAddress(event.target.value)}
             value={propertyAddress}
@@ -81,7 +83,7 @@ const NewListingForm = ({ setShowNewListingModal }) => {
         </label>
 
         <label className={styles.formInputContainer}>
-          <span className={styles.inputLabel}>Area (sq. ft.)</span>
+          <span className={styles.inputLabel}>{messages.area}</span>
           <input
             onChange={event => setArea(event.target.value)}
             value={area}
@@ -90,7 +92,7 @@ const NewListingForm = ({ setShowNewListingModal }) => {
         </label>
 
         <div className={styles.formInputContainer}>
-          <span className={styles.inputLabel}>Number of Rooms</span>
+          <span className={styles.inputLabel}>{messages.numberOfRooms}</span>
           <div className={styles.roomSelectionContainer}>
             {[1, 2, 3, 4, 5].map((room) => (
               <div
@@ -105,7 +107,7 @@ const NewListingForm = ({ setShowNewListingModal }) => {
         </div>
 
         <label className={styles.formInputContainer}>
-          <span className={styles.inputLabel}>Description</span>
+          <span className={styles.inputLabel}>{messages.description}</span>
           <input
             onChange={event => setDescription(event.target.value)}
             value={description}
@@ -114,11 +116,11 @@ const NewListingForm = ({ setShowNewListingModal }) => {
         </label>
 
         <div>
-          <button onClick={handleUploadPropertyImage}>Upload new Image</button>
+          <button onClick={handleUploadPropertyImage}>{messages.uploadImage}</button>
         </div>
 
         <label className={styles.formInputContainer}>
-          <span className={styles.inputLabel}>Price per Day</span>
+          <span className={styles.inputLabel}>{messages.pricePerDay}</span>
           <input
             onChange={event => setPricePerDay(event.target.value)}
             value={pricePerDay}
@@ -136,7 +138,7 @@ const NewListingForm = ({ setShowNewListingModal }) => {
           type='button'
           className='border rounded-lg px-4 py-2 text-sm font-medium'
         >
-          Create
+          {messages.create}
         </button>
       </div>
     </div>
