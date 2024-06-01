@@ -47,7 +47,7 @@ zkRent is a decentralized rental platform built on the blockchain. It leverages 
 
     ```bash
     git clone https://github.com/DEAN-Technologies/zkrent-front-end.git
-    cd zkrent-front-end/next-app
+    cd zkrent-front-end/src
     ```
 
 2. Install dependencies:

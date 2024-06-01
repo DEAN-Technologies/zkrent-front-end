@@ -7,30 +7,11 @@ import Listings from '../components/Listings/Listings'
 import NewListingModal from '../components/Listings/NewListingModal'
 import BookingModal from '../components/Listings/BookingModal'
 import { useZkRent } from '../hooks/useZkRent'
+import { useAppContext } from '../context/context'
 
 export default function Home() {
-  const [showReservedListing, setShowReservedListing] = useState(false)
   const [showNewListingModal, setShowNewListingModal] = useState(false)
   const [showReserveListingModal, setShowReserveListingModal] = useState(false)
-
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [filters, setFilters] = useState({
-    price: '',
-    area: '',
-    isAvailable: false,
-  });
-
-  const handleOpenModal = () => {
-    setIsModalOpen(true);
-  };
-
-  const handleCloseModal = () => {
-    setIsModalOpen(false);
-  };
-
-  const handleApplyFilters = (newFilters) => {
-    setFilters(newFilters);
-  };
 
   const { userAddress } = useZkRent()
 

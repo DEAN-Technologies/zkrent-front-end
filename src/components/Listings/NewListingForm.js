@@ -40,6 +40,8 @@ const NewListingForm = ({ setShowNewListingModal }) => {
     console.log(priceInWei)
 
     addListing(name, propertyAddress, description, imgURL, priceInWei, numberOfRooms, area)
+
+    setShowNewListingModal(false)
   }
 
   const styles = {

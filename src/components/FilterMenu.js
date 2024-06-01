@@ -2,14 +2,11 @@ import Image from 'next/image'
 import { AdjustmentsHorizontalIcon } from '@heroicons/react/24/outline'
 import { useState } from 'react'
 import FilterModal from './Listings/Filter'
+import { useAppContext } from '../context/context';
 
 function FilterMenu() {
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [filters, setFilters] = useState({
-        price: '',
-        area: '',
-        isAvailable: false,
-    });
+    const { setFilters } = useAppContext()
 
     const handleOpenModal = () => {
         setIsModalOpen(true);

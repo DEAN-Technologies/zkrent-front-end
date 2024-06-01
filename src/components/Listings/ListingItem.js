@@ -3,16 +3,21 @@ import { useState, Fragment } from 'react'
 import Web3 from 'web3'
 import { StarIcon } from '@heroicons/react/20/solid'
 import { HeartIcon, TrashIcon } from '@heroicons/react/24/outline'
+import { BackspaceIcon } from '@heroicons/react/24/outline'
 import { useAccount } from 'wagmi'
 import { useAppContext } from '../../context/context'
 import { Dialog, Transition } from '@headlessui/react'
+import { useZkRent } from '../../hooks/useZkRent'
 
 const ListingItem = ({ item, setShowReserveListingModal }) => {
   const [priceInEth] = useState(Web3.utils.fromWei(item.pricePerDay))
   const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false)
+  const [showUnbookConfirmation, setShowUnbookConfirmation] = useState(false)
 
   const { address } = useAccount()
   const { setSelectedPropertyId, setSelectedPropertyDesc } = useAppContext()
+
+  const { unbookPropertyByGuest, unbookPropertyByOwner, unlistProperty } = useZkRent()
 
   const openDeleteConfirmation = (event) => {
     event.stopPropagation()
@@ -25,8 +30,30 @@ const ListingItem = ({ item, setShowReserveListingModal }) => {
   }
 
   const handleDelete = () => {
-    // TODO: Add delete logic
+    unlistProperty(item.id)
     closeDeleteConfirmation()
+  }
+
+  const openUnbookConfirmation = (event) => {
+    event.stopPropagation()
+    setSelectedPropertyId(item.id)
+    setShowUnbookConfirmation(true)
+  }
+
+  const closeUnbookConfirmation = () => {
+    setShowUnbookConfirmation(false)
+  }
+
+  const handleUnbook = () => {
+    if (!address) return;
+
+    if (item.guest === address) {
+      unbookPropertyByGuest(item.id)
+    } else if (item.owner === address) {
+      unbookPropertyByOwner(item.id)
+    }
+
+    closeUnbookConfirmation()
   }
 
   return (
@@ -55,12 +82,18 @@ const ListingItem = ({ item, setShowReserveListingModal }) => {
 
           {address && (
             <div className='transition-all duration-150 absolute top-4 right-4 flex space-x-2'>
-              <HeartIcon
+              {item.isActive && item.guest === address && <HeartIcon
                 className={`w-6 h-6 text-white ${item.isBooked ? 'fill-red-500' : 'opacity-80'}`}
-              />
-              {item.owner === address && (
+              />}
+              {!item.isBooked && item.isActive && item.owner === address && (
                 <TrashIcon
                   onClick={openDeleteConfirmation}
+                  className='w-6 h-6 text-white cursor-pointer hover:opacity-80'
+                />
+              )}
+              {(item.isBooked && item.owner === address || item.guest === address) && (
+                <BackspaceIcon
+                  onClick={openUnbookConfirmation}
                   className='w-6 h-6 text-white cursor-pointer hover:opacity-80'
                 />
               )}
@@ -77,7 +110,7 @@ const ListingItem = ({ item, setShowReserveListingModal }) => {
             </div>
           </div>
 
-          <p className='text-sm font-light text-gray-600'>{788} miles away</p>
+          <p className='text-sm font-light text-gray-600'>{item.distance} miles away</p>
           <p className='text-sm font-light text-gray-600'>{item.address}</p>
 
           <div className='flex space-x-4 mt-2'>
@@ -91,8 +124,10 @@ const ListingItem = ({ item, setShowReserveListingModal }) => {
             </div>
           </div>
 
-          {item.isBooked ? (
-            <div className='text-red-500 text-sm font-medium mt-2'>Property Unavailable</div>
+          {!item.isActive ? (
+            <div className='text-gray-500 text-sm font-medium mt-2'>Property is inactive</div>
+          ) : item.isBooked ? (
+            <div className='text-red-500 text-sm font-medium mt-2'>Property is booked</div>
           ) : (
             <p className='text-sm font-light text-gray-800 mt-2'>
               <span className='text-base font-medium'>ETH {priceInEth.toLocaleString('en-US')}</span>
@@ -101,6 +136,8 @@ const ListingItem = ({ item, setShowReserveListingModal }) => {
           )}
         </div>
       </div>
+
+      {/* Bruh, refactor this please */}
 
       <Transition appear show={showDeleteConfirmation} as={Fragment}>
         <Dialog as='div' className='relative z-50' onClose={closeDeleteConfirmation}>
@@ -132,11 +169,11 @@ const ListingItem = ({ item, setShowReserveListingModal }) => {
                     as='h3'
                     className='text-lg font-medium leading-6 text-gray-900'
                   >
-                    Confirm Deletion
+                    Confirm Unlisting
                   </Dialog.Title>
                   <div className='mt-2'>
                     <p className='text-sm text-gray-600'>
-                      Are you sure you want to delete this listing?
+                      Are you sure you want to unlist this property?
                     </p>
                   </div>
                   <div className='mt-4 flex justify-end space-x-2'>
@@ -152,7 +189,67 @@ const ListingItem = ({ item, setShowReserveListingModal }) => {
                       type='button'
                       className='border rounded-lg px-4 py-2 text-sm font-medium bg-red-500 text-white'
                     >
-                      Delete
+                      Unlist
+                    </button>
+                  </div>
+                </Dialog.Panel>
+              </Transition.Child>
+            </div>
+          </div>
+        </Dialog>
+      </Transition>
+
+      <Transition appear show={showUnbookConfirmation} as={Fragment}>
+        <Dialog as='div' className='relative z-50' onClose={closeUnbookConfirmation}>
+          <Transition.Child
+            as={Fragment}
+            enter='ease-out duration-300'
+            enterFrom='opacity-0'
+            enterTo='opacity-100'
+            leave='ease-in duration-200'
+            leaveFrom='opacity-100'
+            leaveTo='opacity-0'
+          >
+            <div className='fixed inset-0 bg-black bg-opacity-25' />
+          </Transition.Child>
+
+          <div className='fixed inset-0 overflow-y-auto'>
+            <div className='flex min-h-full items-center justify-center p-4 text-center'>
+              <Transition.Child
+                as={Fragment}
+                enter='ease-out duration-300'
+                enterFrom='opacity-0 scale-95'
+                enterTo='opacity-100 scale-100'
+                leave='ease-in duration-200'
+                leaveFrom='opacity-100 scale-100'
+                leaveTo='opacity-0 scale-95'
+              >
+                <Dialog.Panel className='w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all'>
+                  <Dialog.Title
+                    as='h3'
+                    className='text-lg font-medium leading-6 text-gray-900'
+                  >
+                    Confirm Unbooking
+                  </Dialog.Title>
+                  <div className='mt-2'>
+                    <p className='text-sm text-gray-600'>
+                      Are you sure you want to unbook this property?
+                    </p>
+                  </div>
+                  <div className='mt-4 flex justify-end space-x-2'>
+                    <button
+                      onClick={closeUnbookConfirmation}
+                      type='button'
+                      className='border rounded-lg px-4 py-2 text-sm font-medium'
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      onClick={handleUnbook}
+                      type='button'
+                      className='border rounded-lg px-4 py-2 text-sm font-medium bg-red-500 text-white'
+                    >
+                      Unbook
                     </button>
                   </div>
                 </Dialog.Panel>
