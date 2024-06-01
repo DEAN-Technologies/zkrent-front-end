@@ -100,6 +100,11 @@ zkRent is a decentralized rental platform built on the blockchain. It leverages 
 
 This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
 
+## No KYC version
+
+The main branch contains the KYC version that requires its users to scan their biometric passports to generate ZK proofs.
+If you are interested in testing the website with the KYC disabled, switch to the `no-kyc-version` branch or visit https://zkrent-front-end-git-no-kyc-version-zkrent.vercel.app/
+
 ---
 
 Thank you for using zkRent! We hope you have a seamless rental experience.
