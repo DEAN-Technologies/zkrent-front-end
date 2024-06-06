@@ -6,6 +6,7 @@ export const Provider = ({ children }) => {
   const [selectedPropertyId, setSelectedPropertyId] = useState(null)
   const [selectedPropertyDesc, setSelectedPropertyDesc] = useState(null)
   const [searchText, setSearchText] = useState('')
+  const [properties, setProperties] = useState([])
   const [filters, setFilters] = useState({
     priceFrom: '',
     priceTo: '',
@@ -18,7 +19,7 @@ export const Provider = ({ children }) => {
   });
 
   return (
-    <appContext.Provider value={{ selectedPropertyId, setSelectedPropertyId, selectedPropertyDesc, setSelectedPropertyDesc, searchText, setSearchText, filters, setFilters }}>
+    <appContext.Provider value={{ properties, setProperties, selectedPropertyId, setSelectedPropertyId, selectedPropertyDesc, setSelectedPropertyDesc, searchText, setSearchText, filters, setFilters }}>
       {children}
     </appContext.Provider>
   )

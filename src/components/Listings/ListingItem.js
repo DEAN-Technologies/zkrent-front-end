@@ -20,7 +20,7 @@ const ListingItem = ({ item, setShowReserveListingModal }) => {
   const { address } = useAccount()
   const { setSelectedPropertyId, setSelectedPropertyDesc } = useAppContext()
 
-  const { unbookPropertyByGuest, unbookPropertyByOwner, unlistProperty } = useZkRent()
+  const { unbookPropertyByGuest, unbookPropertyByOwner, unlistProperty, getProperties } = useZkRent()
 
   const openDeleteConfirmation = (event) => {
     event.stopPropagation()
@@ -39,6 +39,7 @@ const ListingItem = ({ item, setShowReserveListingModal }) => {
       const txHash = await unlistProperty(item.id)
       const txStatus = await pollTransactionStatus(txHash)
       setStatus(txStatus ? 'success' : 'failed')
+      await getProperties() // Update properties after unlisting
     } catch (error) {
       setStatus('failed')
     }
@@ -67,6 +68,7 @@ const ListingItem = ({ item, setShowReserveListingModal }) => {
       }
       const txStatus = await pollTransactionStatus(txHash)
       setStatus(txStatus ? 'success' : 'failed')
+      await getProperties() // Update properties after unbooking
     } catch (error) {
       setStatus('failed')
     }
