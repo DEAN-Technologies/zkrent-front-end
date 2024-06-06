@@ -1,7 +1,8 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useAccount } from 'wagmi'
-
+import Web3 from 'web3'
 import { createContract } from '../utils/constants'
+import { useAppContext } from '../context/context'
 
 const zeroAddress = "0x0000000000000000000000000000000000000000"
 const seed = 777
@@ -10,7 +11,7 @@ const mod = 937
 export const useZkRent = () => {
   const [contract, setContract] = useState(null)
   const [userAddress, setUserAddress] = useState('')
-  const [properties, setProperties] = useState([])
+  const { setProperties } = useAppContext()
 
   const { address } = useAccount()
 
@@ -20,7 +21,9 @@ export const useZkRent = () => {
   }, [address])
 
   useEffect(() => {
-    getProperties()
+    if (contract) {
+      getProperties()
+    }
   }, [contract])
 
   const getProperties = async () => {
@@ -28,7 +31,7 @@ export const useZkRent = () => {
       try {
         const noOfProps = await contract.methods.counter().call()
 
-        setProperties([])
+        const updatedProperties = []
 
         for (let index = 0; index < noOfProps; index++) {
           const property = await contract.methods.properties(index).call()
@@ -49,8 +52,10 @@ export const useZkRent = () => {
             distance: ((index + 42) ** 2 + seed) % mod, // Don't ask what is going on here
           }
 
-          setProperties(prevState => [...prevState, formattedProperty])
+          updatedProperties.push(formattedProperty)
         }
+
+        setProperties(updatedProperties)
       } catch (error) {
         console.error(error)
       }
@@ -68,11 +73,12 @@ export const useZkRent = () => {
   ) => {
     if (contract) {
       try {
-        await contract.methods
+        const tx = await contract.methods
           .listProperty(name, propertyAddress, description, imgUrl, pricePerDay, numberOfRooms, area)
           .send({ from: address, gas: 3000000, gasLimit: null })
 
-        getProperties()
+        await getProperties() // Update properties after adding a listing
+        return tx.transactionHash
       } catch (error) {
         console.error(error)
       }
@@ -84,16 +90,17 @@ export const useZkRent = () => {
       try {
         const duePrice = await contract.methods
           .getDuePrice(id, startAt, endAt)
-          .call();
+          .call()
 
-        await contract.methods.bookProperty(id, startAt, endAt).send({
+        const tx = await contract.methods.bookProperty(id, startAt, endAt).send({
           from: userAddress,
           value: duePrice,
           gas: 3000000,
           gasLimit: null,
         })
 
-        getProperties()
+        await getProperties() // Update properties after booking a property
+        return tx.transactionHash
       } catch (error) {
         console.error(error)
       }
@@ -103,13 +110,14 @@ export const useZkRent = () => {
   const unlistProperty = async (id) => {
     if (contract) {
       try {
-        await contract.methods.unlistProperty(id).send({
+        const tx = await contract.methods.unlistProperty(id).send({
           from: userAddress,
           gas: 3000000,
           gasLimit: null,
         })
 
-        getProperties()
+        await getProperties() // Update properties after unlisting a property
+        return tx.transactionHash
       } catch (error) {
         console.error(error)
       }
@@ -119,13 +127,14 @@ export const useZkRent = () => {
   const unbookPropertyByGuest = async (id) => {
     if (contract) {
       try {
-        await contract.methods.unBookPropertyByGuest(id).send({
+        const tx = await contract.methods.unBookPropertyByGuest(id).send({
           from: userAddress,
           gas: 3000000,
           gasLimit: null,
         })
 
-        getProperties()
+        await getProperties() // Update properties after unbooking by guest
+        return tx.transactionHash
       } catch (error) {
         console.error(error)
       }
@@ -136,17 +145,18 @@ export const useZkRent = () => {
     if (contract) {
       const refundPrice = await contract.methods
         .getPropertyRentPrice(id)
-        .call();
+        .call()
 
       try {
-        await contract.methods.unBookPropertyByOwner(id).send({
+        const tx = await contract.methods.unBookPropertyByOwner(id).send({
           from: userAddress,
           value: refundPrice,
           gas: 3000000,
           gasLimit: null,
         })
 
-        getProperties()
+        await getProperties() // Update properties after unbooking by owner
+        return tx.transactionHash
       } catch (error) {
         console.error(error)
       }
@@ -157,7 +167,6 @@ export const useZkRent = () => {
     addListing,
     userAddress,
     getProperties,
-    properties,
     bookProperty,
     unbookPropertyByGuest,
     unbookPropertyByOwner,

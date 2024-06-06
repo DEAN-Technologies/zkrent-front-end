@@ -5,8 +5,8 @@ import { useAccount } from 'wagmi';
 import Web3 from 'web3';
 
 const Listings = ({ setShowReserveListingModal }) => {
-  const { properties } = useZkRent();
-  const { searchText, filters } = useAppContext();
+
+  const { properties, searchText, filters } = useAppContext();
   const { address } = useAccount();
 
   const filteredProperties = properties.filter(item => {
