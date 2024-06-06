@@ -1,7 +1,9 @@
 import { useState } from 'react'
 import { useZkRent } from '../../hooks/useZkRent'
 import Web3 from 'web3'
-import * as Bytescale from "@bytescale/upload-widget";
+import * as Bytescale from "@bytescale/upload-widget"
+import { pollTransactionStatus } from '../../hooks/pollTransactionStatus'
+import ClipLoader from "react-spinners/ClipLoader"
 
 const NewListingForm = ({ setShowNewListingModal }) => {
   const [name, setName] = useState('')
@@ -12,15 +14,18 @@ const NewListingForm = ({ setShowNewListingModal }) => {
   const [numberOfRooms, setNumberOfRooms] = useState('')
   const [area, setArea] = useState('')
 
+  const [isCreating, setIsCreating] = useState(false)
+  const [txStatus, setTxStatus] = useState(null)
+
   const { addListing } = useZkRent()
 
   const handleUploadPropertyImage = async () => {
     Bytescale.UploadWidget.open({
-      apiKey: "free",  // Get API keys from: www.bytescale.com
-      maxFileCount: 1  // Full Config: https://www.bytescale.com/docs/upload-widget#configuration
+      apiKey: "free",
+      maxFileCount: 1
     }).then(
       files => {
-        const fileUrls = files.map(x => x.fileUrl).join("\n");
+        const fileUrls = files.map(x => x.fileUrl).join("\n")
         if (fileUrls.length === 0) {
           alert('No files selected.')
         } else {
@@ -28,20 +33,29 @@ const NewListingForm = ({ setShowNewListingModal }) => {
         }
       },
       error => {
-        alert(error);
+        alert(error)
       }
-    );
+    )
   }
 
-  const onCreate = event => {
+  const onCreate = async event => {
     event.preventDefault()
 
     const priceInWei = Web3.utils.toWei(pricePerDay, 'ether')
-    console.log(priceInWei)
 
-    addListing(name, propertyAddress, description, imgURL, priceInWei, numberOfRooms, area)
+    setIsCreating(true)
+    setTxStatus(null)
 
-    setShowNewListingModal(false)
+    try {
+      const txHash = await addListing(name, propertyAddress, description, imgURL, priceInWei, numberOfRooms, area)
+      const status = await pollTransactionStatus(txHash)
+      setTxStatus(status)
+    } catch (error) {
+      console.error(error)
+      setTxStatus(false)
+    } finally {
+      setIsCreating(false)
+    }
   }
 
   const styles = {
@@ -56,7 +70,7 @@ const NewListingForm = ({ setShowNewListingModal }) => {
   }
 
   const handleRoomSelection = (rooms) => {
-    setNumberOfRooms(rooms);
+    setNumberOfRooms(rooms)
   }
 
   return (
@@ -138,6 +152,17 @@ const NewListingForm = ({ setShowNewListingModal }) => {
         >
           Create
         </button>
+      </div>
+
+      <div className='mt-4 flex flex-col items-center'>
+        <ClipLoader
+          loading={isCreating}
+          size={50} // Adjusted size for the spinner
+          aria-label="Loading Spinner"
+          data-testid="loader"
+        />
+        {txStatus === false && <p className='mt-4 text-red-600'>Transaction Failed</p>}
+        {txStatus === true && <p className='mt-4 text-green-600'>Transaction Succeeded</p>}
       </div>
     </div>
   )

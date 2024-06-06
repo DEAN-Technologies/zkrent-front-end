@@ -5,6 +5,8 @@ import 'react-date-range/dist/styles.css'
 import 'react-date-range/dist/theme/default.css'
 import { useZkRent } from '../../hooks/useZkRent'
 import { useAppContext } from '../../context/context'
+import { pollTransactionStatus } from '../../hooks/pollTransactionStatus'
+import ClipLoader from "react-spinners/ClipLoader";
 
 const BookingModal = ({
   showReserveListingModal,
@@ -12,9 +14,17 @@ const BookingModal = ({
 }) => {
   const [startDate, setStartDate] = useState(new Date())
   const [endDate, setEndDate] = useState(new Date())
+  const [isBooking, setIsBooking] = useState(false)
+  const [txStatus, setTxStatus] = useState(null) // New state for transaction status
 
-  const { bookProperty } = useZkRent()
+  const { bookProperty, getProperties } = useZkRent()
   const { selectedPropertyId, selectedPropertyDesc } = useAppContext()
+
+  const override = {
+    display: "block",
+    margin: "0 auto",
+    borderColor: "red",
+  };
 
   const selectionRange = {
     startDate,
@@ -31,12 +41,22 @@ const BookingModal = ({
     setShowReserveListingModal(false)
   }
 
-  const onConfirm = event => {
+  const onConfirm = async event => {
     event.preventDefault()
+    setIsBooking(true)
+    setTxStatus(null)
 
-    bookProperty(selectedPropertyId, startDate, endDate)
-
-    closeModal()
+    try {
+      const txHash = await bookProperty(selectedPropertyId, startDate, endDate)
+      const status = await pollTransactionStatus(txHash)
+      setTxStatus(status)
+    } catch (error) {
+      console.error(error)
+      setTxStatus(false)
+    } finally {
+      setIsBooking(false)
+      getProperties()
+    }
   }
 
   return (
@@ -95,6 +115,18 @@ const BookingModal = ({
                     >
                       Confirm
                     </button>
+                  </div>
+
+                  <div className='mt-4 flex flex-col items-center'>
+                    <ClipLoader
+                      loading={isBooking}
+                      cssOverride={override}
+                      size={50} // Adjusted size for the spinner
+                      aria-label="Loading Spinner"
+                      data-testid="loader"
+                    />
+                    {txStatus === false && <p className='mt-4 text-red-600'>Transaction Failed</p>}
+                    {txStatus === true && <p className='mt-4 text-green-600'>Transaction Succeeded</p>}
                   </div>
                 </div>
               </Dialog.Panel>
