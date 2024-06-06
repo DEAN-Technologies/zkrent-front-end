@@ -16,6 +16,7 @@ const NewListingForm = ({ setShowNewListingModal }) => {
 
   const [isCreating, setIsCreating] = useState(false)
   const [txStatus, setTxStatus] = useState(null)
+  const [txHash, setTxHash] = useState(null)
 
   const { addListing } = useZkRent()
 
@@ -45,9 +46,11 @@ const NewListingForm = ({ setShowNewListingModal }) => {
 
     setIsCreating(true)
     setTxStatus(null)
+    setTxHash(null)
 
     try {
       const txHash = await addListing(name, propertyAddress, description, imgURL, priceInWei, numberOfRooms, area)
+      setTxHash(txHash)
       const status = await pollTransactionStatus(txHash)
       setTxStatus(status)
     } catch (error) {
@@ -57,6 +60,8 @@ const NewListingForm = ({ setShowNewListingModal }) => {
       setIsCreating(false)
     }
   }
+
+  const etherscanLink = txHash ? `https://sepolia.etherscan.io/tx/${txHash}` : '#'
 
   const styles = {
     wrapper: `mt-2`,
@@ -169,7 +174,11 @@ const NewListingForm = ({ setShowNewListingModal }) => {
           data-testid="loader"
         />
         {txStatus === false && <p className='mt-4 text-red-600'>Transaction Failed</p>}
-        {txStatus === true && <p className='mt-4 text-green-600'>Transaction Succeeded</p>}
+        {txStatus === true && (
+          <p className='mt-4 text-green-600'>
+            Transaction Succeeded. View on <a href={etherscanLink} target="_blank" rel="noopener noreferrer" className='text-blue-600 underline'>Etherscan</a>
+          </p>
+        )}
       </div>
     </div>
   )
