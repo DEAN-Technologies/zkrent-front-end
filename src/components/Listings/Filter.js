@@ -2,9 +2,11 @@ import { Dialog, Transition } from '@headlessui/react';
 import { Fragment, useState, useEffect } from 'react';
 import { useAppContext } from '../../context/context';
 import { TrashIcon } from '@heroicons/react/24/outline';
+import useMessages from '../../hooks/useMessages';
 
 const FilterModal = ({ isOpen, onClose, onApply }) => {
     const { filters } = useAppContext();
+    const messages = useMessages();
 
     const [priceFrom, setPriceFrom] = useState('');
     const [priceTo, setPriceTo] = useState('');
@@ -32,17 +34,17 @@ const FilterModal = ({ isOpen, onClose, onApply }) => {
     const handleApply = () => {
         const validationErrors = {};
 
-        if (priceFrom && isNaN(priceFrom)) validationErrors.priceFrom = "Price must be a number";
-        if (priceTo && isNaN(priceTo)) validationErrors.priceTo = "Price must be a number";
-        if (areaMin && isNaN(areaMin)) validationErrors.areaMin = "Area must be a number";
-        if (numberOfRooms && isNaN(numberOfRooms)) validationErrors.numberOfRooms = "Number of rooms must be a number";
-        if (maxDistance && isNaN(maxDistance)) validationErrors.maxDistance = "Distance must be a number";
-        if (priceFrom < 0) validationErrors.priceFromNegative = "Price cannot be negative";
-        if (priceTo < 0) validationErrors.priceToNegative = "Price cannot be negative";
-        if (areaMin < 0) validationErrors.areaMinNegative = "Area cannot be negative";
-        if (numberOfRooms < 0) validationErrors.numberOfRoomsNegative = "Number of rooms cannot be negative";
-        if (maxDistance < 0) validationErrors.maxDistanceNegative = "Distance cannot be negative";
-        if (priceFrom > priceTo) validationErrors.priceMismatch = "Price lower bound can't exceed the upper bound";
+        if (priceFrom && isNaN(priceFrom)) validationErrors.priceFrom = messages.priceMustBeNumber;
+        if (priceTo && isNaN(priceTo)) validationErrors.priceTo = messages.priceMustBeNumber;
+        if (areaMin && isNaN(areaMin)) validationErrors.areaMin = messages.areaMustBeNumber;
+        if (numberOfRooms && isNaN(numberOfRooms)) validationErrors.numberOfRooms = messages.numberOfRoomsMustBeNumber;
+        if (maxDistance && isNaN(maxDistance)) validationErrors.maxDistance = messages.distanceMustBeNumber;
+        if (priceFrom < 0) validationErrors.priceFromNegative = messages.priceCannotBeNegative;
+        if (priceTo < 0) validationErrors.priceToNegative = messages.priceCannotBeNegative;
+        if (areaMin < 0) validationErrors.areaMinNegative = messages.areaCannotBeNegative;
+        if (numberOfRooms < 0) validationErrors.numberOfRoomsNegative = messages.numberOfRoomsCannotBeNegative;
+        if (maxDistance < 0) validationErrors.maxDistanceNegative = messages.distanceCannotBeNegative;
+        if (priceFrom > priceTo) validationErrors.priceMismatch = messages.priceMismatch;
 
         if (Object.keys(validationErrors).length > 0) {
             setErrors(validationErrors);
@@ -97,13 +99,13 @@ const FilterModal = ({ isOpen, onClose, onApply }) => {
                         >
                             <Dialog.Panel className='w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all'>
                                 <Dialog.Title as='h3' className='text-lg font-medium leading-6 text-gray-900'>
-                                    Filter Options
+                                    {messages.filterOptions}
                                 </Dialog.Title>
                                 <div className='mt-2'>
                                     <div className='space-y-4'>
                                         <div className='flex space-x-4'>
                                             <div className='flex-1'>
-                                                <label className='block text-gray-700 mb-1'>Price From:</label>
+                                                <label className='block text-gray-700 mb-1'>{messages.priceFrom}</label>
                                                 <input
                                                     type='number'
                                                     placeholder='e.g. 100'
@@ -115,7 +117,7 @@ const FilterModal = ({ isOpen, onClose, onApply }) => {
                                                 {errors.priceFromNegative && <p className="text-red-500 text-xs">{errors.priceFromNegative}</p>}
                                             </div>
                                             <div className='flex-1'>
-                                                <label className='block text-gray-700 mb-1'>Price To:</label>
+                                                <label className='block text-gray-700 mb-1'>{messages.priceTo}</label>
                                                 <input
                                                     type='number'
                                                     min="0"
@@ -130,7 +132,7 @@ const FilterModal = ({ isOpen, onClose, onApply }) => {
                                         </div>
                                         {errors.priceMismatch && <p className="text-red-500 text-xs">{errors.priceMismatch}</p>}
                                         <div>
-                                            <label className='block text-gray-700 mb-1'>Minimum Area:</label>
+                                            <label className='block text-gray-700 mb-1'>{messages.minArea}</label>
                                             <input
                                                 type='number'
                                                 min="0"
@@ -143,7 +145,7 @@ const FilterModal = ({ isOpen, onClose, onApply }) => {
                                             {errors.areaMinNegative && <p className="text-red-500 text-xs">{errors.areaMinNegative}</p>}
                                         </div>
                                         <div>
-                                            <label className='block text-gray-700 mb-1'>Number of Rooms:</label>
+                                            <label className='block text-gray-700 mb-1'>{messages.numberOfRooms}</label>
                                             <div className='flex justify-between'>
                                                 {[1, 2, 3, 4, 5].map((room) => (
                                                     <div
@@ -166,7 +168,7 @@ const FilterModal = ({ isOpen, onClose, onApply }) => {
                                                     onChange={(e) => setIsActive(e.target.checked)}
                                                     className='mr-2'
                                                 />
-                                                <label className='text-gray-700'>Is Active</label>
+                                                <label className='text-gray-700'>{messages.isActive}</label>
                                             </div>
                                             <div className='flex items-center'>
                                                 <input
@@ -175,7 +177,7 @@ const FilterModal = ({ isOpen, onClose, onApply }) => {
                                                     onChange={(e) => setIsBooked(e.target.checked)}
                                                     className='mr-2'
                                                 />
-                                                <label className='text-gray-700'>Is Booked</label>
+                                                <label className='text-gray-700'>{messages.isBooked}</label>
                                             </div>
                                             <div className='flex items-center'>
                                                 <input
@@ -184,11 +186,11 @@ const FilterModal = ({ isOpen, onClose, onApply }) => {
                                                     onChange={(e) => setIsBookedByMe(e.target.checked)}
                                                     className='mr-2'
                                                 />
-                                                <label className='text-gray-700'>My rentals</label>
+                                                <label className='text-gray-700'>{messages.myRentals}</label>
                                             </div>
                                         </div>
                                         <div>
-                                            <label className='block text-gray-700 mb-1'>Maximum Distance:</label>
+                                            <label className='block text-gray-700 mb-1'>{messages.maxDistance}</label>
                                             <input
                                                 type='number'
                                                 min="0"
@@ -208,13 +210,13 @@ const FilterModal = ({ isOpen, onClose, onApply }) => {
                                         className='inline-flex items-center justify-center rounded-md border border-transparent bg-red-500 px-4 py-2 text-sm font-medium text-white hover:bg-red-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-red-500 focus-visible:ring-offset-2'
                                     >
                                         <TrashIcon className='h-5 w-5 mr-2' />
-                                        Reset Filters
+                                        {messages.resetFilters}
                                     </button>
                                     <button
                                         onClick={handleApply}
                                         className='inline-flex justify-center rounded-md border border-transparent bg-blue-500 px-4 py-2 text-sm font-medium text-white hover:bg-blue-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2'
                                     >
-                                        Apply Filters
+                                        {messages.applyFilters}
                                     </button>
                                 </div>
                             </Dialog.Panel>

@@ -9,6 +9,7 @@ import { Dialog, Transition } from '@headlessui/react'
 import { useZkRent } from '../../hooks/useZkRent'
 import StatusModal from './StatusModal'
 import { pollTransactionStatus } from '../../hooks/pollTransactionStatus'
+import useMessages from '../../hooks/useMessages'
 
 const ListingItem = ({ item, setShowReserveListingModal }) => {
   const [priceInEth] = useState(Web3.utils.fromWei(item.pricePerDay))
@@ -19,6 +20,7 @@ const ListingItem = ({ item, setShowReserveListingModal }) => {
 
   const { address } = useAccount()
   const { setSelectedPropertyId, setSelectedPropertyDesc } = useAppContext()
+  const messages = useMessages()
 
   const { unbookPropertyByGuest, unbookPropertyByOwner, unlistProperty, getProperties } = useZkRent()
 
@@ -135,11 +137,11 @@ const ListingItem = ({ item, setShowReserveListingModal }) => {
 
           <div className='flex space-x-4 mt-2'>
             <div className='flex items-center space-x-1'>
-              <span className='text-sm font-medium text-gray-700'>Area:</span>
-              <span className='text-sm text-gray-600'>{item.area} sq ft</span>
+              <span className='text-sm font-medium text-gray-700'>{messages.area}</span>
+              <span className='text-sm text-gray-600'>{item.area}</span>
             </div>
             <div className='flex items-center space-x-1'>
-              <span className='text-sm font-medium text-gray-700'>Rooms:</span>
+              <span className='text-sm font-medium text-gray-700'>{messages.numberOfRooms}</span>
               <span className='text-sm text-gray-600'>{item.numberOfRooms}</span>
             </div>
           </div>
@@ -151,13 +153,12 @@ const ListingItem = ({ item, setShowReserveListingModal }) => {
           ) : (
             <p className='text-sm font-light text-gray-800 mt-2'>
               <span className='text-base font-medium'>ETH {priceInEth.toLocaleString('en-US')}</span>
-              &nbsp;/ night
+              &nbsp;/ {messages.night}
             </p>
           )}
         </div>
       </div>
 
-      {/* Delete Confirmation Modal */}
       <Transition appear show={showDeleteConfirmation} as={Fragment}>
         <Dialog as='div' className='relative z-50' onClose={closeDeleteConfirmation}>
           <Transition.Child
@@ -188,11 +189,11 @@ const ListingItem = ({ item, setShowReserveListingModal }) => {
                     as='h3'
                     className='text-lg font-medium leading-6 text-gray-900'
                   >
-                    Confirm Unlisting
+                    {messages.confirmUnlisting}
                   </Dialog.Title>
                   <div className='mt-2'>
                     <p className='text-sm text-gray-600'>
-                      Are you sure you want to unlist this property?
+                      {messages.confirmUnlistingMessage}
                     </p>
                   </div>
                   <div className='mt-4 flex justify-end space-x-2'>
@@ -201,14 +202,14 @@ const ListingItem = ({ item, setShowReserveListingModal }) => {
                       type='button'
                       className='border rounded-lg px-4 py-2 text-sm font-medium'
                     >
-                      Cancel
+                      {messages.cancel}
                     </button>
                     <button
                       onClick={handleDelete}
                       type='button'
                       className='border rounded-lg px-4 py-2 text-sm font-medium bg-red-500 text-white'
                     >
-                      Unlist
+                      {messages.unlist}
                     </button>
                   </div>
                 </Dialog.Panel>
@@ -249,11 +250,11 @@ const ListingItem = ({ item, setShowReserveListingModal }) => {
                     as='h3'
                     className='text-lg font-medium leading-6 text-gray-900'
                   >
-                    Confirm Unbooking
+                    {messages.confirmUnbooking}
                   </Dialog.Title>
                   <div className='mt-2'>
                     <p className='text-sm text-gray-600'>
-                      Are you sure you want to unbook this property?
+                      {messages.confirmUnbookingMessage}
                     </p>
                   </div>
                   <div className='mt-4 flex justify-end space-x-2'>
@@ -262,14 +263,14 @@ const ListingItem = ({ item, setShowReserveListingModal }) => {
                       type='button'
                       className='border rounded-lg px-4 py-2 text-sm font-medium'
                     >
-                      Cancel
+                      {messages.cancel}
                     </button>
                     <button
                       onClick={handleUnbook}
                       type='button'
                       className='border rounded-lg px-4 py-2 text-sm font-medium bg-red-500 text-white'
                     >
-                      Unbook
+                      {messages.unbook}
                     </button>
                   </div>
                 </Dialog.Panel>
