@@ -67,6 +67,8 @@ const NewListingForm = ({ setShowNewListingModal }) => {
     roomSelectionContainer: `flex justify-between`,
     roomBox: `cursor-pointer border rounded-lg px-3 py-2 text-sm`,
     activeRoomBox: `bg-blue-500 text-white`,
+    imagePreview: `mt-2 w-full h-64 bg-gray-100 flex items-center justify-center`,
+    image: `max-h-full max-w-full`
   }
 
   const handleRoomSelection = (rooms) => {
@@ -129,6 +131,11 @@ const NewListingForm = ({ setShowNewListingModal }) => {
 
         <div>
           <button onClick={handleUploadPropertyImage}>Upload new Image</button>
+          {imgURL && (
+            <div className={styles.imagePreview}>
+              <img src={imgURL} alt="Uploaded property" className={styles.image} />
+            </div>
+          )}
         </div>
 
         <label className={styles.formInputContainer}>

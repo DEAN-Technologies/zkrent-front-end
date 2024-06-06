@@ -50,23 +50,30 @@ function FilterMenu({ isModalOpen, handleCloseModal, handleApplyFilters }) {
         },
     ]
 
+    const handleOpenModal = () => {
+        // Your logic to open the modal
+    }
+
     return (
         <div className="px-20 pb-10 flex justify-between items-center">
             <div className="flex items-center space-x-10">
                 {menus.map((menu, index) => (
-                    <div key={index} className="flex flex-col justify-center items-center space-y-2">
-                        <div className="relative h-6 w-6">
-                            <Image objectFit="contain" layout="fill" src={menu.icon} />
+                    <Button
+                        key={index}
+                        className="hover:bg-gray-200 hover:scale-105 flex flex-col justify-center items-center space-y-2 p-2 rounded-lg transition duration-200 ease-in-out transform cursor-pointer"
+                    >
+                        <div className="relative h-12 w-12">
+                            <Image objectFit="contain" layout="fill" src={menu.icon} className="rounded-full" />
                         </div>
 
                         <p className="text-xs font-light">{menu.title}</p>
-                    </div>
+                    </Button>
                 ))}
             </div>
-            <button onClick={handleOpenModal} className="border rounded-lg p-4 text-xs font-medium flex space-x-2">
+            <button onClick={handleOpenModal} className="border rounded-lg p-4 text-xs font-medium flex space-x-2 hover:bg-gray-200 transition duration-200 ease-in-out">
                 <AdjustmentsHorizontalIcon className="h-4 w-4" />
-                <FilterModal isOpen={isModalOpen} onClose={handleCloseModal} onApply={handleApplyFilters} />
                 <span>Filters</span>
+                <FilterModal isOpen={isModalOpen} onClose={handleCloseModal} onApply={handleApplyFilters} />
             </button>
         </div>
     )
