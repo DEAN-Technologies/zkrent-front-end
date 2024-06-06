@@ -101,15 +101,17 @@ const Header = () => {
                   leaveFrom='opacity-100 scale-100'
                   leaveTo='opacity-0 scale-95'
                 >
-                  <Dialog.Panel className='w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all'>
+                  <Dialog.Panel className='w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all flex flex-col items-center'>
                     <Dialog.Title
                       as='h3'
-                      className='text-lg font-medium leading-6 text-gray-900'
+                      className='text-lg font-medium leading-6 text-gray-900 mb-4'
                     >
                       {messages.scanQr}
                     </Dialog.Title>
-                    <QRCode value={address} size={256} />
-                    <div className='mt-4 flex justify-end'>
+                    <div className='flex justify-center mb-4'>
+                      <QRCode value={address} size={256} />
+                    </div>
+                    <div className='mt-4'>
                       <button
                         onClick={closeKycModal}
                         className='bg-[#CB6CE6] text-white px-4 py-2 rounded'
