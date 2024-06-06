@@ -2,17 +2,20 @@ import Image from 'next/image'
 import { useState, Fragment } from 'react'
 import Web3 from 'web3'
 import { StarIcon } from '@heroicons/react/20/solid'
-import { HeartIcon, TrashIcon } from '@heroicons/react/24/outline'
-import { BackspaceIcon } from '@heroicons/react/24/outline'
+import { HeartIcon, TrashIcon, BackspaceIcon } from '@heroicons/react/24/outline'
 import { useAccount } from 'wagmi'
 import { useAppContext } from '../../context/context'
 import { Dialog, Transition } from '@headlessui/react'
 import { useZkRent } from '../../hooks/useZkRent'
+import StatusModal from './StatusModal'
+import { pollTransactionStatus } from '../../hooks/pollTransactionStatus'
 
 const ListingItem = ({ item, setShowReserveListingModal }) => {
   const [priceInEth] = useState(Web3.utils.fromWei(item.pricePerDay))
   const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false)
   const [showUnbookConfirmation, setShowUnbookConfirmation] = useState(false)
+  const [showStatusModal, setShowStatusModal] = useState(false)
+  const [status, setStatus] = useState('processing')
 
   const { address } = useAccount()
   const { setSelectedPropertyId, setSelectedPropertyDesc } = useAppContext()
@@ -29,9 +32,16 @@ const ListingItem = ({ item, setShowReserveListingModal }) => {
     setShowDeleteConfirmation(false)
   }
 
-  const handleDelete = () => {
-    unlistProperty(item.id)
-    closeDeleteConfirmation()
+  const handleDelete = async () => {
+    setShowDeleteConfirmation(false)
+    setShowStatusModal(true)
+    try {
+      const txHash = await unlistProperty(item.id)
+      const txStatus = await pollTransactionStatus(txHash)
+      setStatus(txStatus ? 'success' : 'failed')
+    } catch (error) {
+      setStatus('failed')
+    }
   }
 
   const openUnbookConfirmation = (event) => {
@@ -44,16 +54,22 @@ const ListingItem = ({ item, setShowReserveListingModal }) => {
     setShowUnbookConfirmation(false)
   }
 
-  const handleUnbook = () => {
-    if (!address) return;
-
-    if (item.guest === address) {
-      unbookPropertyByGuest(item.id)
-    } else if (item.owner === address) {
-      unbookPropertyByOwner(item.id)
+  const handleUnbook = async () => {
+    if (!address) return
+    setShowUnbookConfirmation(false)
+    setShowStatusModal(true)
+    try {
+      let txHash
+      if (item.guest === address) {
+        txHash = await unbookPropertyByGuest(item.id)
+      } else if (item.owner === address) {
+        txHash = await unbookPropertyByOwner(item.id)
+      }
+      const txStatus = await pollTransactionStatus(txHash)
+      setStatus(txStatus ? 'success' : 'failed')
+    } catch (error) {
+      setStatus('failed')
     }
-
-    closeUnbookConfirmation()
   }
 
   return (
@@ -82,9 +98,11 @@ const ListingItem = ({ item, setShowReserveListingModal }) => {
 
           {address && (
             <div className='transition-all duration-150 absolute top-4 right-4 flex space-x-2'>
-              {item.isActive && item.guest === address && <HeartIcon
-                className={`w-6 h-6 text-white ${item.isBooked ? 'fill-red-500' : 'opacity-80'}`}
-              />}
+              {item.isActive && item.guest === address && (
+                <HeartIcon
+                  className={`w-6 h-6 text-white ${item.isBooked ? 'fill-red-500' : 'opacity-80'}`}
+                />
+              )}
               {!item.isBooked && item.isActive && item.owner === address && (
                 <TrashIcon
                   onClick={openDeleteConfirmation}
@@ -137,8 +155,7 @@ const ListingItem = ({ item, setShowReserveListingModal }) => {
         </div>
       </div>
 
-      {/* Bruh, refactor this please */}
-
+      {/* Delete Confirmation Modal */}
       <Transition appear show={showDeleteConfirmation} as={Fragment}>
         <Dialog as='div' className='relative z-50' onClose={closeDeleteConfirmation}>
           <Transition.Child
@@ -199,6 +216,7 @@ const ListingItem = ({ item, setShowReserveListingModal }) => {
         </Dialog>
       </Transition>
 
+      {/* Unbook Confirmation Modal */}
       <Transition appear show={showUnbookConfirmation} as={Fragment}>
         <Dialog as='div' className='relative z-50' onClose={closeUnbookConfirmation}>
           <Transition.Child
@@ -258,6 +276,13 @@ const ListingItem = ({ item, setShowReserveListingModal }) => {
           </div>
         </Dialog>
       </Transition>
+
+      {/* Status Modal */}
+      <StatusModal
+        show={showStatusModal}
+        onClose={() => setShowStatusModal(false)}
+        status={status}
+      />
     </>
   )
 }
