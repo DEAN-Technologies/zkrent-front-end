@@ -10,9 +10,11 @@ import { useZkRent } from '../hooks/useZkRent'
 import { useAppContext } from '../context/context'
 import useMessages from '../hooks/useMessages'
 import KycNotPassedModal from '../components/Listings/KycNotPassedModal' // Assuming the location is appropriate
+import Dashboard from '../components/Listings/Dashboard'
 
 export default function Home() {
   const [showNewListingModal, setShowNewListingModal] = useState(false)
+  const [showDashboard, setShowDashboard] = useState(false)
   const [showReserveListingModal, setShowReserveListingModal] = useState(false)
   const [showKycNotPassedModal, setShowKycNotPassedModal] = useState(false)
 
@@ -28,6 +30,14 @@ export default function Home() {
     setShowNewListingModal(true)
   }
 
+  const handleDashboardClick = () => {
+    if (!kycPassed) {
+      setShowKycNotPassedModal(true)
+      return
+    }
+    setShowDashboard(true)
+  }
+
   return (
     <div>
       <Head>
@@ -38,22 +48,40 @@ export default function Home() {
 
       <main className='pt-10 pb-20'>
         <FilterMenu />
-        {userAddress && (
-          <div className='px-20 pb-10 flex justify-end space-x-4'>
-            <button
-              onClick={handleNewListingClick}
-              className='border rounded-lg p-4 text-xs font-medium'
-            >
-              {messages.addListing}
-            </button>
-          </div>
-        )}
+        <div className="flex items-center space-x-10">
+          {userAddress && (
+            <div className='px-20 pb-10 flex justify-end space-x-4'>
+              <button
+                onClick={handleNewListingClick}
+                className='border rounded-lg p-4 text-xs font-medium'
+              >
+                {messages.addListing}
+              </button>
+            </div>
+          )}
+
+          {userAddress && (
+            <div className='px-20 pb-10 flex justify-end space-x-4'>
+              <button
+                onClick={handleDashboardClick}
+                className='border rounded-lg p-4 text-xs font-medium'
+              >
+                Dashboard
+              </button>
+            </div>
+          )}
+        </div>
 
         <Listings setShowReserveListingModal={setShowReserveListingModal} />
 
         <NewListingModal
           showNewListingModal={showNewListingModal}
           setShowNewListingModal={setShowNewListingModal}
+        />
+
+        <Dashboard
+          showDashboard={showDashboard}
+          setShowDashboard={setShowDashboard}
         />
 
         <BookingModal
