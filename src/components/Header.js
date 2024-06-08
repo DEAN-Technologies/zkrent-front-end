@@ -83,7 +83,7 @@ const Header = () => {
                 className={`text-sm font-medium transition-all duration-300 px-4 py-2 rounded-full ${kycPassed ? 'bg-gradient-to-r from-green-400 via-blue-500 to-purple-600 text-white' : 'bg-white text-gray-800 border border-gray-300 hover:bg-gray-100'}`}
                 onClick={openKycModal}
               >
-                {kycPassed ? "KYC passed!" : messages.passKyc}
+                {kycPassed ? messages.kycPassedTitle : messages.passKyc}
               </button>
             )}
           </div>

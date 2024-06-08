@@ -173,7 +173,7 @@ const ListingItem = ({ item, setShowReserveListingModal }) => {
             </div>
           </div>
 
-          <p className='text-sm font-light text-gray-600'>{item.distance} miles away</p>
+          <p className='text-sm font-light text-gray-600'>{item.distance} {messages.distance}</p>
           <p className='text-sm font-light text-gray-600'>{item.address}</p>
 
           <div className='flex space-x-4 mt-2'>
@@ -188,7 +188,7 @@ const ListingItem = ({ item, setShowReserveListingModal }) => {
           </div>
 
           <div className='flex space-x-2 items-center mt-2'>
-            <span className='text-sm font-medium text-gray-700'>Owner:</span>
+            <span className='text-sm font-medium text-gray-700'>{messages.owner}:</span>
             <span className='text-sm text-gray-600'>{truncateAddress(item.owner)}</span>
             <ClipboardIcon
               onClick={(event) => copyToClipboard(item.owner, event)}

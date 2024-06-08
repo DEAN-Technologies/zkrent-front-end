@@ -35,7 +35,7 @@
     "night": "night",
     "name": "Name",
     "address": "Address",
-    "area": "Area (sq. ft.)",
+    "area": "Area (sq. m.)",
     "description": "Description",
     "uploadImage": "Upload new Image",
     "pricePerDay": "Price per Day",
@@ -56,6 +56,7 @@
         "anyWeek": "Any week",
         "searchPlaceholder": "Search",
         "passKyc": "Pass the KYC",
+        "kycPassedTitle": "KYC passed!",
         "close": "Close",
         "scanQr": "Scan this QR Code with ZkRent mobile app",
         "language": "Language"
@@ -71,5 +72,6 @@
     "lakefront": "Lakefront",
     "surfing": "Surfing",
     "cabins": "Cabins",
-    "kycPassedTitle": "KYC passed!"
+    "distance": "kilometers away",
+    "owner": "Owner"
 }

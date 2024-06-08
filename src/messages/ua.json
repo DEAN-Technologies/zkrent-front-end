@@ -35,7 +35,7 @@
     "night": "ніч",
     "name": "Назва",
     "address": "Адреса",
-    "area": "Площа (кв. фути)",
+    "area": "Площа (кв. м)",
     "description": "Опис",
     "uploadImage": "Завантажити нове зображення",
     "pricePerDay": "Ціна за день",
@@ -56,6 +56,7 @@
         "anyWeek": "Будь-який тиждень",
         "searchPlaceholder": "Пошук",
         "passKyc": "Пройти KYC",
+        "kycPassedTitle": "KYC пройдено!",
         "close": "Закрити",
         "scanQr": "Скануйте цей QR-код через мобільний додаток ZkRent",
         "language": "Мова"
@@ -71,5 +72,6 @@
     "lakefront": "Берег озера",
     "surfing": "Серфінг",
     "cabins": "Котеджі",
-    "kycPassedTitle": "KYC пройдено!"
+    "distance": "кілометрів від вас",
+    "owner": "Власник"
 }
