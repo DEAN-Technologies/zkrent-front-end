@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react'
 import { useAccount } from 'wagmi'
-import Web3 from 'web3'
 import { createContract } from '../utils/constants'
 import { useAppContext } from '../context/context'
 

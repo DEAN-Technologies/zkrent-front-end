@@ -8,18 +8,39 @@ import QRCode from 'qrcode.react'
 import { Dialog, Transition } from '@headlessui/react'
 import { useAppContext } from '../context/context'
 import useMessages from '../hooks/useMessages'
+import { useZkRent } from '../hooks/useZkRent'
 
 const Header = () => {
   const [domLoaded, setDomLoaded] = useState(false)
   const [kycModalIsOpen, setKycModalIsOpen] = useState(false)
   const [languageModalIsOpen, setLanguageModalIsOpen] = useState(false)
   const { address } = useAccount()
-  const { setSearchText, setLanguage, language, kycPassed } = useAppContext()
+  const { setSearchText, setLanguage, language, kycPassed, setKycPassed } = useAppContext()
   const messages = useMessages().header
+  const { isWhitelisted } = useZkRent()
 
   useEffect(() => {
     setDomLoaded(true)
   }, [])
+
+  useEffect(() => {
+    if (!kycPassed && address && kycModalIsOpen) {
+      const interval = setInterval(async () => {
+        try {
+          console.log("Polling whitelist status...")
+          const whitelisted = await isWhitelisted(address)
+          if (whitelisted) {
+            setKycPassed(true)
+            clearInterval(interval)
+          }
+        } catch (error) {
+          console.error("Error checking whitelist status:", error)
+        }
+      }, 3000)
+
+      return () => clearInterval(interval)
+    }
+  }, [kycPassed, address, kycModalIsOpen, isWhitelisted, setKycPassed])
 
   const openKycModal = () => setKycModalIsOpen(true)
   const closeKycModal = () => setKycModalIsOpen(false)
