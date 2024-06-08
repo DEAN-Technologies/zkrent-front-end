@@ -14,7 +14,7 @@ const Header = () => {
   const [kycModalIsOpen, setKycModalIsOpen] = useState(false)
   const [languageModalIsOpen, setLanguageModalIsOpen] = useState(false)
   const { address } = useAccount()
-  const { setSearchText, setLanguage, language } = useAppContext()
+  const { setSearchText, setLanguage, language, kycPassed } = useAppContext()
   const messages = useMessages().header
 
   useEffect(() => {
@@ -56,13 +56,13 @@ const Header = () => {
         </div>
 
         <div className='flex items-center justify-end relative'>
-          <div className='border border-transparent cursor-pointer hover:bg-gray-100 rounded-full px-3 py-2'>
+          <div className='cursor-pointer'>
             {domLoaded && address && (
               <button
-                className='text-sm font-medium transition-all duration-300 text-gray-800'
+                className={`text-sm font-medium transition-all duration-300 px-4 py-2 rounded-full ${kycPassed ? 'bg-gradient-to-r from-green-400 via-blue-500 to-purple-600 text-white' : 'bg-white text-gray-800 border border-gray-300 hover:bg-gray-100'}`}
                 onClick={openKycModal}
               >
-                {messages.passKyc}
+                {kycPassed ? "KYC passed!" : messages.passKyc}
               </button>
             )}
           </div>
@@ -102,23 +102,39 @@ const Header = () => {
                   leaveTo='opacity-0 scale-95'
                 >
                   <Dialog.Panel className='w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all flex flex-col items-center'>
-                    <Dialog.Title
-                      as='h3'
-                      className='text-lg font-medium leading-6 text-gray-900 mb-4'
-                    >
-                      {messages.scanQr}
-                    </Dialog.Title>
-                    <div className='flex justify-center mb-4'>
-                      <QRCode value={address} size={256} />
-                    </div>
-                    <div className='mt-4'>
-                      <button
-                        onClick={closeKycModal}
-                        className='bg-[#CB6CE6] text-white px-4 py-2 rounded'
-                      >
-                        {messages.close}
-                      </button>
-                    </div>
+                    {kycPassed ? (
+                      <>
+                        <p className='text-gray-800 mb-4'>Congrats! KYC is passed for address: {address}</p>
+                        <div className='mt-4'>
+                          <button
+                            onClick={closeKycModal}
+                            className='bg-[#CB6CE6] text-white px-4 py-2 rounded'
+                          >
+                            {messages.close}
+                          </button>
+                        </div>
+                      </>
+                    ) : (
+                      <>
+                        <Dialog.Title
+                          as='h3'
+                          className='text-lg font-medium leading-6 text-gray-900 mb-4'
+                        >
+                          {messages.scanQr}
+                        </Dialog.Title>
+                        <div className='flex justify-center mb-4'>
+                          <QRCode value={address} size={256} />
+                        </div>
+                        <div className='mt-4'>
+                          <button
+                            onClick={closeKycModal}
+                            className='bg-[#CB6CE6] text-white px-4 py-2 rounded'
+                          >
+                            {messages.close}
+                          </button>
+                        </div>
+                      </>
+                    )}
                   </Dialog.Panel>
                 </Transition.Child>
               </div>

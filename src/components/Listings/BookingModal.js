@@ -16,10 +16,10 @@ const BookingModal = ({
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(new Date());
   const [isBooking, setIsBooking] = useState(false)
-  const [txStatus, setTxStatus] = useState(null) // New state for transaction status
+  const [txStatus, setTxStatus] = useState(null)
 
   const { bookProperty, getProperties } = useZkRent();
-  const { selectedPropertyId, selectedPropertyDesc } = useAppContext();
+  const { selectedPropertyId, selectedPropertyDesc, kycPassed } = useAppContext();
   const messages = useMessages();
 
   const override = {

@@ -10,16 +10,18 @@ import { useZkRent } from '../../hooks/useZkRent'
 import StatusModal from './StatusModal'
 import { pollTransactionStatus } from '../../hooks/pollTransactionStatus'
 import useMessages from '../../hooks/useMessages'
+import KycNotPassedModal from './KycNotPassedModal'
 
 const ListingItem = ({ item, setShowReserveListingModal }) => {
   const [priceInEth] = useState(Web3.utils.fromWei(item.pricePerDay))
   const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false)
   const [showUnbookConfirmation, setShowUnbookConfirmation] = useState(false)
   const [showStatusModal, setShowStatusModal] = useState(false)
+  const [showKycNotPassedModal, setShowKycNotPassedModal] = useState(false)
   const [status, setStatus] = useState('processing')
 
   const { address } = useAccount()
-  const { setSelectedPropertyId, setSelectedPropertyDesc } = useAppContext()
+  const { setSelectedPropertyId, setSelectedPropertyDesc, kycPassed } = useAppContext()
   const messages = useMessages()
 
   const { unbookPropertyByGuest, unbookPropertyByOwner, unlistProperty, getProperties } = useZkRent()
@@ -76,17 +78,25 @@ const ListingItem = ({ item, setShowReserveListingModal }) => {
     }
   }
 
+  const handleReserveClick = (event) => {
+    event.preventDefault()
+    if (item.isBooked) return
+
+    if (!kycPassed) {
+      setShowKycNotPassedModal(true)
+      return
+    }
+
+    setShowReserveListingModal(true)
+    setSelectedPropertyId(item.id)
+    setSelectedPropertyDesc(item.description)
+  }
+
   return (
     <>
       <div
         className='flex flex-col space-y-3 cursor-pointer max-w-[20rem]'
-        onClick={event => {
-          event.preventDefault()
-          if (item.isBooked) return
-          setShowReserveListingModal(true)
-          setSelectedPropertyId(item.id)
-          setSelectedPropertyDesc(item.description)
-        }}
+        onClick={handleReserveClick}
       >
         <div className='relative h-[22rem] w-auto max-w-[20rem] group'>
           <div className='relative h-[20rem] w-[20rem]'>
@@ -159,6 +169,7 @@ const ListingItem = ({ item, setShowReserveListingModal }) => {
         </div>
       </div>
 
+      {/* Delete Confirmation Modal */}
       <Transition appear show={showDeleteConfirmation} as={Fragment}>
         <Dialog as='div' className='relative z-50' onClose={closeDeleteConfirmation}>
           <Transition.Child
@@ -285,6 +296,13 @@ const ListingItem = ({ item, setShowReserveListingModal }) => {
         show={showStatusModal}
         onClose={() => setShowStatusModal(false)}
         status={status}
+      />
+
+      {/* KYC Not Passed Modal */}
+      <KycNotPassedModal
+        isOpen={showKycNotPassedModal}
+        onClose={() => setShowKycNotPassedModal(false)}
+        address={address}
       />
     </>
   )

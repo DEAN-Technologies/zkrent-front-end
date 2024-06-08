@@ -75,7 +75,11 @@ const NewListingForm = ({ setShowNewListingModal }) => {
     roomBox: `cursor-pointer border rounded-lg px-3 py-2 text-sm`,
     activeRoomBox: `bg-blue-500 text-white`,
     imagePreview: `mt-2 w-full h-64 bg-gray-100 flex items-center justify-center`,
-    image: `max-h-full max-w-full`
+    image: `max-h-full max-w-full`,
+    uploadButton: `mt-2 border border-blue-500 bg-blue-500 text-white rounded-lg px-4 py-2 text-sm font-medium cursor-pointer hover:bg-blue-600 transition-all`,
+    createButton: `border rounded-lg px-4 py-2 text-sm font-medium transition-all`,
+    createButtonDisabled: `bg-gray-200 text-gray-500 cursor-not-allowed`,
+    createButtonEnabled: `bg-green-500 text-white hover:bg-green-600`,
   }
 
   const handleRoomSelection = (rooms) => {
@@ -136,8 +140,10 @@ const NewListingForm = ({ setShowNewListingModal }) => {
           />
         </label>
 
-        <div>
-          <button onClick={handleUploadPropertyImage}>{messages.uploadImage}</button>
+        <div className='flex flex-col'>
+          <button onClick={handleUploadPropertyImage} className={styles.uploadButton}>
+            {messages.uploadImage}
+          </button>
           {imgURL && (
             <div className={styles.imagePreview}>
               <img src={imgURL} alt="Uploaded property" className={styles.image} />
@@ -162,7 +168,7 @@ const NewListingForm = ({ setShowNewListingModal }) => {
             !name || !propertyAddress || !imgURL || !pricePerDay || !area || !numberOfRooms
           }
           type='button'
-          className='border rounded-lg px-4 py-2 text-sm font-medium'
+          className={`${styles.createButton} ${(!name || !propertyAddress || !imgURL || !pricePerDay || !area || !numberOfRooms) ? styles.createButtonDisabled : styles.createButtonEnabled}`}
         >
           {messages.create}
         </button>
@@ -171,7 +177,7 @@ const NewListingForm = ({ setShowNewListingModal }) => {
       <div className='mt-4 flex flex-col items-center'>
         <ClipLoader
           loading={isCreating}
-          size={50} // Adjusted size for the spinner
+          size={50}
           aria-label="Loading Spinner"
           data-testid="loader"
         />

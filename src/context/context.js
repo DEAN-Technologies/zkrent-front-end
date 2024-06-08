@@ -7,6 +7,7 @@ export const Provider = ({ children }) => {
   const [selectedPropertyDesc, setSelectedPropertyDesc] = useState(null)
   const [searchText, setSearchText] = useState('')
   const [properties, setProperties] = useState([])
+  const [kycPassed, setKycPassed] = useState(true)
   const [filters, setFilters] = useState({
     priceFrom: '',
     priceTo: '',
@@ -20,7 +21,7 @@ export const Provider = ({ children }) => {
   const [language, setLanguage] = useState('en')
 
   return (
-    <appContext.Provider value={{ properties, setProperties, selectedPropertyId, setSelectedPropertyId, selectedPropertyDesc, setSelectedPropertyDesc, searchText, setSearchText, filters, setFilters, language, setLanguage }}>
+    <appContext.Provider value={{ kycPassed, setKycPassed, properties, setProperties, selectedPropertyId, setSelectedPropertyId, selectedPropertyDesc, setSelectedPropertyDesc, searchText, setSearchText, filters, setFilters, language, setLanguage }}>
       {children}
     </appContext.Provider>
   )

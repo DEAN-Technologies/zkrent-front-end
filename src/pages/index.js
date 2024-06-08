@@ -1,5 +1,5 @@
 import Head from 'next/head'
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import Header from '../components/Header'
 import Footer from '../components/Footer'
 import FilterMenu from '../components/FilterMenu'
@@ -9,13 +9,24 @@ import BookingModal from '../components/Listings/BookingModal'
 import { useZkRent } from '../hooks/useZkRent'
 import { useAppContext } from '../context/context'
 import useMessages from '../hooks/useMessages'
+import KycNotPassedModal from '../components/Listings/KycNotPassedModal' // Assuming the location is appropriate
 
 export default function Home() {
   const [showNewListingModal, setShowNewListingModal] = useState(false)
   const [showReserveListingModal, setShowReserveListingModal] = useState(false)
+  const [showKycNotPassedModal, setShowKycNotPassedModal] = useState(false)
 
   const { userAddress } = useZkRent()
+  const { kycPassed, address } = useAppContext()
   const messages = useMessages()
+
+  const handleNewListingClick = () => {
+    if (!kycPassed) {
+      setShowKycNotPassedModal(true)
+      return
+    }
+    setShowNewListingModal(true)
+  }
 
   return (
     <div>
@@ -30,7 +41,7 @@ export default function Home() {
         {userAddress && (
           <div className='px-20 pb-10 flex justify-end space-x-4'>
             <button
-              onClick={() => setShowNewListingModal(true)}
+              onClick={handleNewListingClick}
               className='border rounded-lg p-4 text-xs font-medium'
             >
               {messages.addListing}
@@ -52,6 +63,13 @@ export default function Home() {
       </main>
 
       <Footer />
+
+      {/* KYC Not Passed Modal */}
+      <KycNotPassedModal
+        isOpen={showKycNotPassedModal}
+        onClose={() => setShowKycNotPassedModal(false)}
+        address={address}
+      />
     </div>
   )
 }
