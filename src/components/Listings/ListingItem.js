@@ -169,7 +169,7 @@ const ListingItem = ({ item, setShowReserveListingModal }) => {
             <h3 className='font-medium'>{item.name}</h3>
             <div className='flex items-center space-x-1'>
               <StarIcon className='h-3 w-3 text-yellow-500' />
-              <p className='text-sm text-gray-800'>4.8</p>
+              <p className='text-sm text-gray-800'>{item.rating}</p>
             </div>
           </div>
 

@@ -37,6 +37,8 @@ export const useZkRent = () => {
 
         for (let index = 0; index < noOfProps; index++) {
           const property = await contract.methods.properties(index).call()
+          let baseRating = ((index ** 2 + seed) / 10) % 5;
+          let rating = baseRating < 3 ? baseRating + 2 : baseRating;
 
           const formattedProperty = {
             id: index,
@@ -52,6 +54,7 @@ export const useZkRent = () => {
             numberOfRooms: property['numberOfRooms'],
             owner: property['owner'],
             distance: ((index + 42) ** 2 + seed) % mod, // Don't ask what is going on here
+            rating: rating.toFixed(2), // And here too
           }
 
           updatedProperties.push(formattedProperty)
