@@ -48,27 +48,22 @@ export default function Home() {
 
       <main className='pt-10 pb-20'>
         <FilterMenu />
-        <div className="flex items-center space-x-10">
+        <div className="flex justify-end items-center px-20 pb-10 space-x-4">
           {userAddress && (
-            <div className='px-20 pb-10 flex justify-end space-x-4'>
-              <button
-                onClick={handleNewListingClick}
-                className='border rounded-lg p-4 text-xs font-medium'
-              >
-                {messages.addListing}
-              </button>
-            </div>
+            <button
+              onClick={handleNewListingClick}
+              className='border rounded-lg p-4 text-xs font-medium text-black hover:bg-gray-100'
+            >
+              {messages.addListing}
+            </button>
           )}
-
           {userAddress && (
-            <div className='px-20 pb-10 flex justify-end space-x-4'>
-              <button
-                onClick={handleDashboardClick}
-                className='border rounded-lg p-4 text-xs font-medium'
-              >
-                Dashboard
-              </button>
-            </div>
+            <button
+              onClick={handleDashboardClick}
+              className='border rounded-lg p-4 text-xs font-medium bg-blue-500 text-white hover:bg-blue-600'
+            >
+              {messages.dashboard}
+            </button>
           )}
         </div>
 
@@ -92,7 +87,6 @@ export default function Home() {
 
       <Footer />
 
-      {/* KYC Not Passed Modal */}
       <KycNotPassedModal
         isOpen={showKycNotPassedModal}
         onClose={() => setShowKycNotPassedModal(false)}

@@ -2,24 +2,24 @@ import Image from 'next/image'
 import { AdjustmentsHorizontalIcon } from '@heroicons/react/24/outline'
 import { useState } from 'react'
 import FilterModal from './Listings/Filter'
-import { useAppContext } from '../context/context';
-import useMessages from '../hooks/useMessages';
+import { useAppContext } from '../context/context'
+import useMessages from '../hooks/useMessages'
 
 function FilterMenu() {
-    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isModalOpen, setIsModalOpen] = useState(false)
     const { setFilters } = useAppContext()
 
     const handleOpenModal = () => {
-        setIsModalOpen(true);
-    };
+        setIsModalOpen(true)
+    }
 
     const handleCloseModal = () => {
-        setIsModalOpen(false);
-    };
+        setIsModalOpen(false)
+    }
 
     const handleApplyFilters = (newFilters) => {
-        setFilters(newFilters);
-    };
+        setFilters(newFilters)
+    }
 
     const messages = useMessages()
 
@@ -74,16 +74,18 @@ function FilterMenu() {
         <div className="px-20 pb-10 flex justify-between items-center">
             <div className="flex items-center space-x-10">
                 {menus.map((menu, index) => (
-                    <div key={index} className="flex flex-col justify-center items-center space-y-2">
+                    <div
+                        key={index}
+                        className="flex flex-col justify-center items-center space-y-2 hover:bg-gray-100 rounded-md p-4"
+                    >
                         <div className="relative h-6 w-6">
                             <Image objectFit="contain" layout="fill" src={menu.icon} />
                         </div>
-
                         <p className="text-xs font-light">{menu.title}</p>
                     </div>
                 ))}
             </div>
-            <button onClick={handleOpenModal} className="border rounded-lg p-4 text-xs font-medium flex space-x-2">
+            <button onClick={handleOpenModal} className="border rounded-lg p-4 text-xs font-medium flex space-x-2 hover:bg-gray-100">
                 <AdjustmentsHorizontalIcon className="h-4 w-4" />
                 <FilterModal isOpen={isModalOpen} onClose={handleCloseModal} onApply={handleApplyFilters} />
                 <span>{messages.filters}</span>

@@ -1,10 +1,10 @@
 import { Dialog, Transition } from '@headlessui/react';
 import { Fragment } from 'react';
 import useMessages from '../../hooks/useMessages';
+import { useAccount } from 'wagmi';
 
-const KycNotPassedModal = ({ isOpen, onClose, address }) => {
-    const messages = useMessages();
-
+const KycNotPassedModal = ({ isOpen, onClose }) => {
+    const { address } = useAccount()
     return (
         <Transition appear show={isOpen} as={Fragment}>
             <Dialog as='div' className='relative z-50' onClose={onClose}>
