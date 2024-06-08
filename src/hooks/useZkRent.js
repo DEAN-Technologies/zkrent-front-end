@@ -11,7 +11,7 @@ const mod = 937
 export const useZkRent = () => {
   const [contract, setContract] = useState(null)
   const [userAddress, setUserAddress] = useState('')
-  const { setProperties } = useAppContext()
+  const { setProperties, setKycPassed } = useAppContext()
 
   const { address } = useAccount()
 
@@ -22,6 +22,9 @@ export const useZkRent = () => {
 
   useEffect(() => {
     if (contract) {
+      if (address) {
+        isWhitelisted(address)
+      }
       getProperties()
     }
   }, [contract])
@@ -163,8 +166,24 @@ export const useZkRent = () => {
     }
   }
 
+  const isWhitelisted = async (address) => {
+    if (!contract) return;
+
+    try {
+      const isWhitelisted = await contract.methods.whitelist(address).call()
+
+      console.log("WL:", isWhitelisted);
+
+      setKycPassed(isWhitelisted)
+    } catch (error) {
+      console.error(error)
+    }
+  }
+
+
   return {
     addListing,
+    isWhitelisted,
     userAddress,
     getProperties,
     bookProperty,

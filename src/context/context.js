@@ -7,7 +7,7 @@ export const Provider = ({ children }) => {
   const [selectedPropertyDesc, setSelectedPropertyDesc] = useState(null)
   const [searchText, setSearchText] = useState('')
   const [properties, setProperties] = useState([])
-  const [kycPassed, setKycPassed] = useState(true)
+  const [kycPassed, setKycPassed] = useState(false)
   const [filters, setFilters] = useState({
     priceFrom: '',
     priceTo: '',
