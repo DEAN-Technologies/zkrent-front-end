@@ -5,6 +5,7 @@ import { useAppContext } from '../../context/context'
 import { useAccount } from 'wagmi'
 import DmailIcon from '../../public/images/dmail.png'
 import ZkBridgeIcon from '../../public/images/zkbridge.png'
+import Web3 from 'web3'
 
 const Dashboard = ({ showDashboard, setShowDashboard }) => {
     const { properties } = useAppContext()
@@ -77,7 +78,7 @@ const Dashboard = ({ showDashboard, setShowDashboard }) => {
                                                         <div>
                                                             <p className='font-medium'>{property.name}</p>
                                                             <p className='text-sm text-gray-600'>{property.address}</p>
-                                                            <p className='text-sm text-gray-600'>Price: {property.pricePerDay} ETH/day</p>
+                                                            <p className='text-sm text-gray-600'>Price: {Web3.utils.fromWei(property.pricePerDay, 'ether')} ETH/night</p>
                                                             <div className='mt-2'>
                                                                 <p className='text-sm text-gray-600 mb-1'>Owner: {truncateAddress(property.owner)}</p>
                                                                 <div className='flex items-center space-x-2'>
@@ -118,7 +119,7 @@ const Dashboard = ({ showDashboard, setShowDashboard }) => {
                                                         <div>
                                                             <p className='font-medium'>{property.name}</p>
                                                             <p className='text-sm text-gray-600'>{property.address}</p>
-                                                            <p className='text-sm text-gray-600'>Price: {property.pricePerDay} ETH/day</p>
+                                                            <p className='text-sm text-gray-600'>Price: {Web3.utils.fromWei(property.pricePerDay, 'ether')} ETH/night</p>
                                                             <p className='text-sm text-gray-600'>Status: {property.isBooked ? 'Booked' : 'Available'}</p>
                                                             {property.isBooked && (
                                                                 <div className='mt-2'>
