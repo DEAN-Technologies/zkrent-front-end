@@ -67,7 +67,6 @@ const Dashboard = ({ showDashboard, setShowDashboard }) => {
                                     Dashboard
                                 </Dialog.Title>
                                 <div className='mt-4 flex gap-4'>
-                                    {/* My Bookings */}
                                     <div className='w-1/2'>
                                         <h4 className='text-md font-semibold mb-2'>My Bookings</h4>
                                         <ul className='space-y-2'>
@@ -108,7 +107,6 @@ const Dashboard = ({ showDashboard, setShowDashboard }) => {
                                             )}
                                         </ul>
                                     </div>
-                                    {/* My Listings */}
                                     <div className='w-1/2'>
                                         <h4 className='text-md font-semibold mb-2'>My Listings</h4>
                                         <ul className='space-y-2'>

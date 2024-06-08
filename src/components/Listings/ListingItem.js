@@ -126,14 +126,14 @@ const ListingItem = ({ item, setShowReserveListingModal }) => {
   return (
     <>
       <div
-        className='flex flex-col space-y-3 cursor-pointer max-w-[20rem]'
+        className='flex flex-col space-y-3 cursor-pointer max-w-[20rem] rounded-lg transition-all duration-300'
         onClick={handleReserveClick}
       >
-        <div className='relative h-[22rem] w-auto max-w-[20rem] group'>
-          <div className='relative h-[20rem] w-[20rem]'>
+        <div className='relative h-[22rem] w-auto max-w-[20rem] rounded-lg overflow-hidden group'>
+          <div className='relative h-[20rem] w-[20rem] rounded-lg overflow-hidden'>
             <div className={`${item.isBooked && ''}`}>
               <Image
-                className='h-full w-full rounded-xl object-cover'
+                className='h-full w-full object-cover transition-transform duration-300 group-hover:scale-105'
                 src={item.imgUrl}
                 layout='fill'
                 alt={`Image of ${item.name}`}
@@ -142,7 +142,7 @@ const ListingItem = ({ item, setShowReserveListingModal }) => {
           </div>
 
           {address && (
-            <div className='transition-all duration-150 absolute top-4 right-4 flex space-x-2'>
+            <div className='transition-all duration-150 absolute top-4 right-4 flex space-x-2 opacity-0 group-hover:opacity-100'>
               {item.isActive && item.guest === address && (
                 <HeartIcon
                   className={`w-6 h-6 text-white ${item.isBooked ? 'fill-red-500' : 'opacity-80'}`}
@@ -164,7 +164,7 @@ const ListingItem = ({ item, setShowReserveListingModal }) => {
           )}
         </div>
 
-        <div className='space-y-1'>
+        <div className='space-y-1 px-3'>
           <div className='flex justify-between items-center'>
             <h3 className='font-medium'>{item.name}</h3>
             <div className='flex items-center space-x-1'>
@@ -209,9 +209,9 @@ const ListingItem = ({ item, setShowReserveListingModal }) => {
           </div>
 
           {!item.isActive ? (
-            <div className='text-gray-500 text-sm font-medium mt-2'>Property is inactive</div>
+            <div className='text-gray-500 text-sm font-medium mt-2'>{messages.propertyInactive}</div>
           ) : item.isBooked ? (
-            <div className='text-red-500 text-sm font-medium mt-2'>Property is booked</div>
+            <div className='text-red-500 text-sm font-medium mt-2'>{messages.propertyBooked}</div>
           ) : (
             <p className='text-sm font-light text-gray-800 mt-2'>
               <span className='text-base font-medium'>ETH {priceInEth.toLocaleString('en-US')}</span>

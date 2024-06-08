@@ -74,5 +74,7 @@
     "surfing": "Surfing",
     "cabins": "Cabins",
     "distance": "kilometers away",
-    "owner": "Owner"
+    "owner": "Owner",
+    "propertyInactive": "Property is inactive",
+    "propertyBooked": "Property is booked"
 }

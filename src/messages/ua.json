@@ -74,5 +74,7 @@
     "surfing": "Серфінг",
     "cabins": "Котеджі",
     "distance": "кілометрів від вас",
-    "owner": "Власник"
+    "owner": "Власник",
+    "propertyInactive": "Деактивовано",
+    "propertyBooked": "Уже здається"
 }
