@@ -17,9 +17,10 @@ const BookingModal = ({
   const [endDate, setEndDate] = useState(new Date());
   const [isBooking, setIsBooking] = useState(false)
   const [txStatus, setTxStatus] = useState(null)
+  const [txHash, setTxHash] = useState(null) // Add state to store transaction hash
 
   const { bookProperty, getProperties } = useZkRent();
-  const { selectedPropertyId, selectedPropertyDesc, kycPassed } = useAppContext();
+  const { selectedPropertyId, selectedPropertyDesc } = useAppContext();
   const messages = useMessages();
 
   const override = {
@@ -50,6 +51,7 @@ const BookingModal = ({
 
     try {
       const txHash = await bookProperty(selectedPropertyId, startDate, endDate)
+      setTxHash(txHash) // Store the transaction hash
       const status = await pollTransactionStatus(txHash)
       setTxStatus(status)
     } catch (error) {
@@ -60,6 +62,8 @@ const BookingModal = ({
       getProperties()
     }
   }
+
+  const etherscanLink = txHash ? `https://sepolia.etherscan.io/tx/${txHash}` : '#'
 
   return (
     <Transition appear show={showReserveListingModal} as={Fragment}>
@@ -123,12 +127,16 @@ const BookingModal = ({
                     <ClipLoader
                       loading={isBooking}
                       cssOverride={override}
-                      size={50} // Adjusted size for the spinner
+                      size={50}
                       aria-label="Loading Spinner"
                       data-testid="loader"
                     />
                     {txStatus === false && <p className='mt-4 text-red-600'>Transaction Failed</p>}
-                    {txStatus === true && <p className='mt-4 text-green-600'>Transaction Succeeded</p>}
+                    {txStatus === true && (
+                      <p className='mt-4 text-green-600'>
+                        Transaction Succeeded. View on <a href={etherscanLink} target="_blank" rel="noopener noreferrer" className='text-blue-600 underline'>Etherscan</a>
+                      </p>
+                    )}
                   </div>
                 </div>
               </Dialog.Panel>

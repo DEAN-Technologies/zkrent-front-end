@@ -19,6 +19,7 @@ const ListingItem = ({ item, setShowReserveListingModal }) => {
   const [showStatusModal, setShowStatusModal] = useState(false)
   const [showKycNotPassedModal, setShowKycNotPassedModal] = useState(false)
   const [status, setStatus] = useState('processing')
+  const [txHash, setTxHash] = useState(null)
 
   const { address } = useAccount()
   const { setSelectedPropertyId, setSelectedPropertyDesc, kycPassed } = useAppContext()
@@ -39,8 +40,10 @@ const ListingItem = ({ item, setShowReserveListingModal }) => {
   const handleDelete = async () => {
     setShowDeleteConfirmation(false)
     setShowStatusModal(true)
+    setTxHash(null) // Reset txHash before new transaction
     try {
       const txHash = await unlistProperty(item.id)
+      setTxHash(txHash) // Store the transaction hash
       const txStatus = await pollTransactionStatus(txHash)
       setStatus(txStatus ? 'success' : 'failed')
       await getProperties() // Update properties after unlisting
@@ -63,6 +66,7 @@ const ListingItem = ({ item, setShowReserveListingModal }) => {
     if (!address) return
     setShowUnbookConfirmation(false)
     setShowStatusModal(true)
+    setTxHash(null) // Reset txHash before new transaction
     try {
       let txHash
       if (item.guest === address) {
@@ -70,6 +74,7 @@ const ListingItem = ({ item, setShowReserveListingModal }) => {
       } else if (item.owner === address) {
         txHash = await unbookPropertyByOwner(item.id)
       }
+      setTxHash(txHash) // Store the transaction hash
       const txStatus = await pollTransactionStatus(txHash)
       setStatus(txStatus ? 'success' : 'failed')
       await getProperties() // Update properties after unbooking
@@ -296,6 +301,7 @@ const ListingItem = ({ item, setShowReserveListingModal }) => {
         show={showStatusModal}
         onClose={() => setShowStatusModal(false)}
         status={status}
+        txHash={txHash} // Pass the transaction hash to the StatusModal
       />
 
       {/* KYC Not Passed Modal */}

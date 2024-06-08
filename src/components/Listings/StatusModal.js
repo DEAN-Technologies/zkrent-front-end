@@ -2,9 +2,20 @@ import { Dialog, Transition } from '@headlessui/react'
 import { Fragment } from 'react'
 import ClipLoader from 'react-spinners/ClipLoader'
 
-const StatusModal = ({ show, onClose, status }) => {
+const StatusModal = ({ show, onClose, status, txHash }) => {
     const getStatusMessage = () => {
-        if (status === 'success') return 'Transaction Succeeded'
+        if (status === 'success') {
+            return (
+                <>
+                    <p>Transaction Succeeded</p>
+                    {txHash && (
+                        <p className='mt-2'>
+                            View on <a href={`https://sepolia.etherscan.io/tx/${txHash}`} target="_blank" rel="noopener noreferrer" className='text-blue-600 underline'>Etherscan</a>
+                        </p>
+                    )}
+                </>
+            )
+        }
         if (status === 'failed') return 'Transaction Failed'
         return 'Processing Transaction...'
     }
