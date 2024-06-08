@@ -2,7 +2,7 @@ import Image from 'next/image'
 import { useState, Fragment } from 'react'
 import Web3 from 'web3'
 import { StarIcon } from '@heroicons/react/20/solid'
-import { HeartIcon, TrashIcon, BackspaceIcon } from '@heroicons/react/24/outline'
+import { HeartIcon, TrashIcon, BackspaceIcon, ClipboardIcon } from '@heroicons/react/24/outline'
 import { useAccount } from 'wagmi'
 import { useAppContext } from '../../context/context'
 import { Dialog, Transition } from '@headlessui/react'
@@ -12,6 +12,10 @@ import { pollTransactionStatus } from '../../hooks/pollTransactionStatus'
 import useMessages from '../../hooks/useMessages'
 import KycNotPassedModal from './KycNotPassedModal'
 
+// Import PNG icons
+import DmailIcon from '../../public/images/dmail.png'
+import ZkBridgeIcon from '../../public/images/zkbridge.png'
+
 const ListingItem = ({ item, setShowReserveListingModal }) => {
   const [priceInEth] = useState(Web3.utils.fromWei(item.pricePerDay))
   const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false)
@@ -20,6 +24,8 @@ const ListingItem = ({ item, setShowReserveListingModal }) => {
   const [showKycNotPassedModal, setShowKycNotPassedModal] = useState(false)
   const [status, setStatus] = useState('processing')
   const [txHash, setTxHash] = useState(null)
+  const [popupMessage, setPopupMessage] = useState('')
+  const [showPopup, setShowPopup] = useState(false)
 
   const { address } = useAccount()
   const { setSelectedPropertyId, setSelectedPropertyDesc, kycPassed } = useAppContext()
@@ -40,13 +46,13 @@ const ListingItem = ({ item, setShowReserveListingModal }) => {
   const handleDelete = async () => {
     setShowDeleteConfirmation(false)
     setShowStatusModal(true)
-    setTxHash(null) // Reset txHash before new transaction
+    setTxHash(null)
     try {
       const txHash = await unlistProperty(item.id)
-      setTxHash(txHash) // Store the transaction hash
+      setTxHash(txHash)
       const txStatus = await pollTransactionStatus(txHash)
       setStatus(txStatus ? 'success' : 'failed')
-      await getProperties() // Update properties after unlisting
+      await getProperties()
     } catch (error) {
       setStatus('failed')
     }
@@ -66,7 +72,7 @@ const ListingItem = ({ item, setShowReserveListingModal }) => {
     if (!address) return
     setShowUnbookConfirmation(false)
     setShowStatusModal(true)
-    setTxHash(null) // Reset txHash before new transaction
+    setTxHash(null)
     try {
       let txHash
       if (item.guest === address) {
@@ -74,10 +80,10 @@ const ListingItem = ({ item, setShowReserveListingModal }) => {
       } else if (item.owner === address) {
         txHash = await unbookPropertyByOwner(item.id)
       }
-      setTxHash(txHash) // Store the transaction hash
+      setTxHash(txHash)
       const txStatus = await pollTransactionStatus(txHash)
       setStatus(txStatus ? 'success' : 'failed')
-      await getProperties() // Update properties after unbooking
+      await getProperties()
     } catch (error) {
       setStatus('failed')
     }
@@ -95,6 +101,26 @@ const ListingItem = ({ item, setShowReserveListingModal }) => {
     setShowReserveListingModal(true)
     setSelectedPropertyId(item.id)
     setSelectedPropertyDesc(item.description)
+  }
+
+  const truncateAddress = (address) => {
+    return `${address.substring(0, 6)}...${address.substring(address.length - 4)}`
+  }
+
+  const copyToClipboard = (text, event) => {
+    event.stopPropagation()
+    navigator.clipboard.writeText(text).then(() => {
+      setPopupMessage('Address copied to clipboard')
+      setShowPopup(true)
+      setTimeout(() => {
+        setShowPopup(false)
+      }, 3000)
+    })
+  }
+
+  const handleIconClick = (event, url) => {
+    event.stopPropagation()
+    window.open(url, '_blank', 'noopener,noreferrer')
   }
 
   return (
@@ -159,6 +185,27 @@ const ListingItem = ({ item, setShowReserveListingModal }) => {
               <span className='text-sm font-medium text-gray-700'>{messages.numberOfRooms}</span>
               <span className='text-sm text-gray-600'>{item.numberOfRooms}</span>
             </div>
+          </div>
+
+          <div className='flex space-x-2 items-center mt-2'>
+            <span className='text-sm font-medium text-gray-700'>Owner:</span>
+            <span className='text-sm text-gray-600'>{truncateAddress(item.owner)}</span>
+            <ClipboardIcon
+              onClick={(event) => copyToClipboard(item.owner, event)}
+              className='w-5 h-5 text-gray-600 cursor-pointer hover:text-gray-800'
+            />
+            <img
+              src={DmailIcon.src}
+              alt="Dmail"
+              className="w-5 h-5 cursor-pointer hover:opacity-80"
+              onClick={(event) => handleIconClick(event, 'https://mail.dmail.ai/compose')}
+            />
+            <img
+              src={ZkBridgeIcon.src}
+              alt="zkBridge"
+              className="w-5 h-5 cursor-pointer hover:opacity-80"
+              onClick={(event) => handleIconClick(event, 'https://www.zkbridge.com/zkmessenger')}
+            />
           </div>
 
           {!item.isActive ? (
@@ -296,20 +343,24 @@ const ListingItem = ({ item, setShowReserveListingModal }) => {
         </Dialog>
       </Transition>
 
-      {/* Status Modal */}
       <StatusModal
         show={showStatusModal}
         onClose={() => setShowStatusModal(false)}
         status={status}
-        txHash={txHash} // Pass the transaction hash to the StatusModal
+        txHash={txHash}
       />
 
-      {/* KYC Not Passed Modal */}
       <KycNotPassedModal
         isOpen={showKycNotPassedModal}
         onClose={() => setShowKycNotPassedModal(false)}
         address={address}
       />
+
+      {showPopup && (
+        <div className='fixed bottom-10 left-1/2 transform -translate-x-1/2 bg-gray-300 text-white px-4 py-2 rounded shadow-lg z-50'>
+          {popupMessage}
+        </div>
+      )}
     </>
   )
 }
