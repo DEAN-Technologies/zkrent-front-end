@@ -1,5 +1,5 @@
 import Head from 'next/head'
-import { useState } from 'react'
+import { useState, Fragment } from 'react'
 import Header from '../components/Header'
 import Footer from '../components/Footer'
 import FilterMenu from '../components/FilterMenu'
@@ -9,16 +9,21 @@ import BookingModal from '../components/Listings/BookingModal'
 import { useZkRent } from '../hooks/useZkRent'
 import { useAppContext } from '../context/context'
 import useMessages from '../hooks/useMessages'
-import KycNotPassedModal from '../components/Listings/KycNotPassedModal' // Assuming the location is appropriate
+import KycNotPassedModal from '../components/Listings/KycNotPassedModal'
 import Dashboard from '../components/Listings/Dashboard'
+import { ArrowPathIcon } from '@heroicons/react/24/outline'
+import { Transition } from '@headlessui/react'
 
 export default function Home() {
   const [showNewListingModal, setShowNewListingModal] = useState(false)
   const [showDashboard, setShowDashboard] = useState(false)
   const [showReserveListingModal, setShowReserveListingModal] = useState(false)
   const [showKycNotPassedModal, setShowKycNotPassedModal] = useState(false)
+  const [isRefreshing, setIsRefreshing] = useState(false) // State for refresh button flashing
+  const [showReloadMessage, setShowReloadMessage] = useState(false) // State for showing reload message
+  const [iconClicked, setIconClicked] = useState(false) // State to indicate icon click
 
-  const { userAddress } = useZkRent()
+  const { userAddress, getProperties, isWhitelisted } = useZkRent()
   const { kycPassed, address } = useAppContext()
   const messages = useMessages()
 
@@ -38,15 +43,28 @@ export default function Home() {
     setShowDashboard(true)
   }
 
+  const handleRefreshClick = async () => {
+    setIconClicked(true)
+    setIsRefreshing(true)
+    setTimeout(() => setIconClicked(false), 500) // Reset the icon click effect after 0.5 seconds
+    await getProperties()
+    if (address) {
+      await isWhitelisted(address)
+    }
+    setIsRefreshing(false)
+    setShowReloadMessage(true)
+    setTimeout(() => setShowReloadMessage(false), 3000) // Show message for 3 seconds
+  }
+
   return (
-    <div>
+    <div className='min-h-screen flex flex-col'>
       <Head>
         <title>ZkRent</title>
       </Head>
 
       <Header />
 
-      <main className='pt-10 pb-20'>
+      <main className='pt-10 pb-20 flex-grow'>
         <FilterMenu />
         <div className="flex justify-end items-center px-20 pb-10 space-x-4">
           {userAddress && (
@@ -65,33 +83,65 @@ export default function Home() {
               {messages.dashboard}
             </button>
           )}
+          {userAddress && (
+            <div
+              onClick={handleRefreshClick}
+              className='text-gray-600 hover:text-gray-800 cursor-pointer flex items-center'
+            >
+              <ArrowPathIcon
+                className={`h-6 w-6 transition-transform duration-150 ease-in-out ${iconClicked ? 'text-blue-500 transform scale-125' : ''}`}
+              />
+            </div>
+          )}
         </div>
+
+        <Transition
+          show={showReloadMessage}
+          enter="transition-opacity duration-500"
+          enterFrom="opacity-0"
+          enterTo="opacity-100"
+          leave="transition-opacity duration-500"
+          leaveFrom="opacity-100"
+          leaveTo="opacity-0"
+        >
+          <div className='fixed bottom-20 right-10 bg-gray-100 text-black px-6 py-3 rounded-lg shadow-lg border border-gray-300 text-lg font-bold'>
+            Data has been reloaded!
+          </div>
+        </Transition>
 
         <Listings setShowReserveListingModal={setShowReserveListingModal} />
 
-        <NewListingModal
-          showNewListingModal={showNewListingModal}
-          setShowNewListingModal={setShowNewListingModal}
-        />
+        <Transition show={showNewListingModal} as={Fragment} enter="transition-opacity duration-300" enterFrom="opacity-0" enterTo="opacity-100" leave="transition-opacity duration-300" leaveFrom="opacity-100" leaveTo="opacity-0">
+          <NewListingModal
+            showNewListingModal={showNewListingModal}
+            setShowNewListingModal={setShowNewListingModal}
+          />
+        </Transition>
 
-        <Dashboard
-          showDashboard={showDashboard}
-          setShowDashboard={setShowDashboard}
-        />
+        <Transition show={showDashboard} as={Fragment} enter="transition-opacity duration-300" enterFrom="opacity-0" enterTo="opacity-100" leave="transition-opacity duration-300" leaveFrom="opacity-100" leaveTo="opacity-0">
+          <Dashboard
+            showDashboard={showDashboard}
+            setShowDashboard={setShowDashboard}
+          />
+        </Transition>
 
-        <BookingModal
-          showReserveListingModal={showReserveListingModal}
-          setShowReserveListingModal={setShowReserveListingModal}
-        />
+        <Transition show={showReserveListingModal} as={Fragment} enter="transition-opacity duration-300" enterFrom="opacity-0" enterTo="opacity-100" leave="transition-opacity duration-300" leaveFrom="opacity-100" leaveTo="opacity-0">
+          <BookingModal
+            showReserveListingModal={showReserveListingModal}
+            setShowReserveListingModal={setShowReserveListingModal}
+          />
+        </Transition>
       </main>
 
       <Footer />
 
-      <KycNotPassedModal
-        isOpen={showKycNotPassedModal}
-        onClose={() => setShowKycNotPassedModal(false)}
-        address={address}
-      />
+      <Transition show={showKycNotPassedModal} as={Fragment} enter="transition-opacity duration-300" enterFrom="opacity-0" enterTo="opacity-100" leave="transition-opacity duration-300" leaveFrom="opacity-100" leaveTo="opacity-0">
+        <KycNotPassedModal
+          isOpen={showKycNotPassedModal}
+          onClose={() => setShowKycNotPassedModal(false)}
+          address={address}
+        />
+      </Transition>
     </div>
   )
 }
