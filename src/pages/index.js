@@ -111,26 +111,20 @@ export default function Home() {
 
         <Listings setShowReserveListingModal={setShowReserveListingModal} />
 
-        <Transition show={showNewListingModal} as={Fragment} enter="transition-opacity duration-300" enterFrom="opacity-0" enterTo="opacity-100" leave="transition-opacity duration-300" leaveFrom="opacity-100" leaveTo="opacity-0">
-          <NewListingModal
-            showNewListingModal={showNewListingModal}
-            setShowNewListingModal={setShowNewListingModal}
-          />
-        </Transition>
+        <NewListingModal
+          showNewListingModal={showNewListingModal}
+          setShowNewListingModal={setShowNewListingModal}
+        />
 
-        <Transition show={showDashboard} as={Fragment} enter="transition-opacity duration-300" enterFrom="opacity-0" enterTo="opacity-100" leave="transition-opacity duration-300" leaveFrom="opacity-100" leaveTo="opacity-0">
-          <Dashboard
-            showDashboard={showDashboard}
-            setShowDashboard={setShowDashboard}
-          />
-        </Transition>
+        <Dashboard
+          showDashboard={showDashboard}
+          setShowDashboard={setShowDashboard}
+        />
 
-        <Transition show={showReserveListingModal} as={Fragment} enter="transition-opacity duration-300" enterFrom="opacity-0" enterTo="opacity-100" leave="transition-opacity duration-300" leaveFrom="opacity-100" leaveTo="opacity-0">
-          <BookingModal
-            showReserveListingModal={showReserveListingModal}
-            setShowReserveListingModal={setShowReserveListingModal}
-          />
-        </Transition>
+        <BookingModal
+          showReserveListingModal={showReserveListingModal}
+          setShowReserveListingModal={setShowReserveListingModal}
+        />
       </main>
 
       <Footer />
