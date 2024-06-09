@@ -129,13 +129,11 @@ export default function Home() {
 
       <Footer />
 
-      <Transition show={showKycNotPassedModal} as={Fragment} enter="transition-opacity duration-300" enterFrom="opacity-0" enterTo="opacity-100" leave="transition-opacity duration-300" leaveFrom="opacity-100" leaveTo="opacity-0">
-        <KycNotPassedModal
-          isOpen={showKycNotPassedModal}
-          onClose={() => setShowKycNotPassedModal(false)}
-          address={address}
-        />
-      </Transition>
+      <KycNotPassedModal
+        isOpen={showKycNotPassedModal}
+        onClose={() => setShowKycNotPassedModal(false)}
+        address={address}
+      />
     </div>
   )
 }
