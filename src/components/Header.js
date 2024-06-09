@@ -44,14 +44,16 @@ const Header = () => {
 
   const openKycModal = () => setKycModalIsOpen(true)
   const closeKycModal = () => setKycModalIsOpen(false)
-
-  const openLanguageModal = () => setLanguageModalIsOpen(true)
-  const closeLanguageModal = () => {
+  const handleAddMocks = () => {
     const addMocks = async () => {
       await addMockedListings()
     }
 
     addMocks()
+  }
+
+  const openLanguageModal = () => setLanguageModalIsOpen(true)
+  const closeLanguageModal = () => {
     setLanguageModalIsOpen(false)
   }
 
@@ -74,7 +76,7 @@ const Header = () => {
               <p className='text-gray-800 bg-transparent text-sm font-medium px-4' type='text'>
                 {messages.anywhere}
               </p>
-              <p className='text-gray-800 bg-transparent text-sm font-medium px-4' type='text'>
+              <p onClick={handleAddMocks} className='text-gray-800 bg-transparent text-sm font-medium px-4' type='text'>
                 {messages.anyWeek}
               </p>
               <input onChange={event => setSearchText(event.target.value)} className='text-gray-600 bg-transparent text-sm font-light px-4' placeholder={messages.searchPlaceholder} />

@@ -103,6 +103,7 @@ export const useZkRent = () => {
         await getProperties()
       } catch (error) {
         console.error(error)
+        break
       }
     }
   }
