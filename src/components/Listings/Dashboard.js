@@ -11,8 +11,8 @@ const Dashboard = ({ showDashboard, setShowDashboard }) => {
     const { properties } = useAppContext()
     const { address } = useAccount()
 
-    const myBookings = properties.filter(property => property.guest.toLowerCase() === address.toLowerCase());
-    const myListings = properties.filter(property => property.owner.toLowerCase() === address.toLowerCase());
+    const myBookings = properties.filter(property => property.guest === address);
+    const myListings = properties.filter(property => property.owner === address);
 
     // Hardcoded statistics data
     const totalEarned = "5.23"; // in ETH
