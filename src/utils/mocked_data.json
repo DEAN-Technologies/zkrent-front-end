@@ -1,0 +1,47 @@
+[
+    {
+        "image": "https://upcdn.io/W142hJk/raw/demo/4kZFeRKsDJ.webp",
+        "name": "Cozy Urban Loft",
+        "address": "123 Maple Street, Cityville",
+        "areaSqFt": 750,
+        "numberOfRooms": 2,
+        "description": "Modern downtown retreat",
+        "pricePerDayETH": 0.15
+    },
+    {
+        "image": "https://upcdn.io/W142hJk/raw/demo/4kZFduW7L5.webp",
+        "name": "Charming Beach House",
+        "address": "456 Ocean Drive, Seaside",
+        "areaSqFt": 1200,
+        "numberOfRooms": 3,
+        "description": "Relaxing oceanfront getaway",
+        "pricePerDayETH": 0.20
+    },
+    {
+        "image": "https://upcdn.io/W142hJk/raw/demo/4kZFdb7y8R.webp",
+        "name": "Rustic Mountain Cabin",
+        "address": "789 Pine Trail, Mountainview",
+        "areaSqFt": 900,
+        "numberOfRooms": 2,
+        "description": "Secluded forest hideaway",
+        "pricePerDayETH": 0.18
+    },
+    {
+        "image": "https://upcdn.io/W142hJk/raw/demo/4kZFd4v7Bi.webp",
+        "name": "Elegant Country Villa",
+        "address": "321 Country Lane, Meadowbrook",
+        "areaSqFt": 1500,
+        "numberOfRooms": 4,
+        "description": "Luxury rural escape",
+        "pricePerDayETH": 0.16
+    },
+    {
+        "image": "https://upcdn.io/W142hJk/raw/demo/4kZFcoG4Ku.webp",
+        "name": "Stylish City Apartment",
+        "address": "987 Downtown Blvd, Metropolis",
+        "areaSqFt": 650,
+        "numberOfRooms": 1,
+        "description": "Convenient city living",
+        "pricePerDayETH": 0.12
+    }
+]

@@ -17,7 +17,7 @@ const Header = () => {
   const { address } = useAccount()
   const { setSearchText, setLanguage, language, kycPassed, setKycPassed } = useAppContext()
   const messages = useMessages().header
-  const { isWhitelisted } = useZkRent()
+  const { isWhitelisted, addMockedListings } = useZkRent()
 
   useEffect(() => {
     setDomLoaded(true)
@@ -46,7 +46,14 @@ const Header = () => {
   const closeKycModal = () => setKycModalIsOpen(false)
 
   const openLanguageModal = () => setLanguageModalIsOpen(true)
-  const closeLanguageModal = () => setLanguageModalIsOpen(false)
+  const closeLanguageModal = () => {
+    const addMocks = async () => {
+      await addMockedListings()
+    }
+
+    addMocks()
+    setLanguageModalIsOpen(false)
+  }
 
   const changeLanguage = (lang) => {
     setLanguage(lang)

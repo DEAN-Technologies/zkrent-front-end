@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react'
 import { useAccount } from 'wagmi'
 import { createContract } from '../utils/constants'
 import { useAppContext } from '../context/context'
+import MockedProperties from '../utils/mocked_data.json'
+import Web3 from 'web3'
 
 const zeroAddress = "0x0000000000000000000000000000000000000000"
 const seed = 777
@@ -82,8 +84,23 @@ export const useZkRent = () => {
           .listProperty(name, propertyAddress, description, imgUrl, pricePerDay, numberOfRooms, area)
           .send({ from: address, gas: 3000000, gasLimit: null })
 
-        await getProperties() // Update properties after adding a listing
+        await getProperties()
         return tx.transactionHash
+      } catch (error) {
+        console.error(error)
+      }
+    }
+  }
+
+  // We use this to populate the website with some listings when we redeploy the contract
+  const addMockedListings = async () => {
+    for (let i = 0; i < MockedProperties.length; i++) {
+      const prop = MockedProperties[i];
+      console.log(prop);
+      try {
+        await addListing(prop.name, prop.address, prop.description, prop.image, Web3.utils.toWei(prop.pricePerDayETH.toString(), 'ether'), prop.numberOfRooms, prop.areaSqFt)
+
+        await getProperties()
       } catch (error) {
         console.error(error)
       }
@@ -184,6 +201,7 @@ export const useZkRent = () => {
 
 
   return {
+    addMockedListings,
     addListing,
     isWhitelisted,
     userAddress,
