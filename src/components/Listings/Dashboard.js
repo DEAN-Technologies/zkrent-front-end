@@ -1,6 +1,6 @@
 import { Dialog, Transition } from '@headlessui/react'
 import { Fragment } from 'react'
-import { ClipboardIcon } from '@heroicons/react/24/outline'
+import { ClipboardIcon, CurrencyDollarIcon, ShoppingCartIcon, HomeIcon, CalendarIcon } from '@heroicons/react/24/outline'
 import { useAppContext } from '../../context/context'
 import { useAccount } from 'wagmi'
 import DmailIcon from '../../public/images/dmail.png'
@@ -14,9 +14,18 @@ const Dashboard = ({ showDashboard, setShowDashboard }) => {
     const myBookings = properties.filter(property => property.guest.toLowerCase() === address.toLowerCase());
     const myListings = properties.filter(property => property.owner.toLowerCase() === address.toLowerCase());
 
+    // Hardcoded statistics data
+    const totalEarned = "5.23"; // in ETH
+    const totalSpent = "3.45"; // in ETH
+    const timesBooked = myBookings.length;
+    const timesRented = myListings.length;
+    const daysBooked = 25; // Example value
+    const daysRented = 40; // Example value
+
     const copyToClipboard = (text, event) => {
         event.stopPropagation();
         navigator.clipboard.writeText(text).then(() => {
+            alert('Address copied to clipboard!');
         });
     };
 
@@ -66,9 +75,40 @@ const Dashboard = ({ showDashboard, setShowDashboard }) => {
                                 >
                                     Dashboard
                                 </Dialog.Title>
+                                <div className='mt-4'>
+                                    {/* Statistics Section */}
+                                    <div className='grid grid-cols-2 gap-4 mb-6'>
+                                        <div className='flex items-center space-x-2'>
+                                            <CurrencyDollarIcon className='w-6 h-6 text-green-500' />
+                                            <span className='text-sm font-medium'>Total Earned: <span className='text-green-500'>{totalEarned} ETH</span></span>
+                                        </div>
+                                        <div className='flex items-center space-x-2'>
+                                            <CurrencyDollarIcon className='w-6 h-6 text-red-500' />
+                                            <span className='text-sm font-medium'>Total Spent: <span className='text-red-500'>{totalSpent} ETH</span></span>
+                                        </div>
+                                        <div className='flex items-center space-x-2'>
+                                            <ShoppingCartIcon className='w-6 h-6 text-gray-700' />
+                                            <span className='text-sm font-medium'>Times Booked: {timesBooked}</span>
+                                        </div>
+                                        <div className='flex items-center space-x-2'>
+                                            <HomeIcon className='w-6 h-6 text-gray-700' />
+                                            <span className='text-sm font-medium'>Times Rented: {timesRented}</span>
+                                        </div>
+                                        <div className='flex items-center space-x-2'>
+                                            <CalendarIcon className='w-6 h-6 text-gray-700' />
+                                            <span className='text-sm font-medium'>Days Booked: {daysBooked}</span>
+                                        </div>
+                                        <div className='flex items-center space-x-2'>
+                                            <CalendarIcon className='w-6 h-6 text-gray-700' />
+                                            <span className='text-sm font-medium'>Days Rented: {daysRented}</span>
+                                        </div>
+                                    </div>
+                                </div>
                                 <div className='mt-4 flex gap-4'>
                                     <div className='w-1/2'>
-                                        <h4 className='text-md font-semibold mb-2'>My Bookings</h4>
+                                        <h4 className='text-md font-semibold mb-2'>
+                                            My Bookings <span className='text-gray-500'>({myBookings.length})</span>
+                                        </h4>
                                         <ul className='space-y-2'>
                                             {myBookings.length > 0 ? (
                                                 myBookings.map((property) => (
@@ -108,7 +148,9 @@ const Dashboard = ({ showDashboard, setShowDashboard }) => {
                                         </ul>
                                     </div>
                                     <div className='w-1/2'>
-                                        <h4 className='text-md font-semibold mb-2'>My Listings</h4>
+                                        <h4 className='text-md font-semibold mb-2'>
+                                            My Listings <span className='text-gray-500'>({myListings.length})</span>
+                                        </h4>
                                         <ul className='space-y-2'>
                                             {myListings.length > 0 ? (
                                                 myListings.map((property) => (
