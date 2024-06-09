@@ -1,5 +1,4 @@
 import ListingItem from './ListingItem';
-import { useZkRent } from '../../hooks/useZkRent';
 import { useAppContext } from '../../context/context';
 import { useAccount } from 'wagmi';
 import Web3 from 'web3';

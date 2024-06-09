@@ -153,40 +153,49 @@ const Dashboard = ({ showDashboard, setShowDashboard }) => {
                                         </h4>
                                         <ul className='space-y-2'>
                                             {myListings.length > 0 ? (
-                                                myListings.map((property) => (
-                                                    <li key={property.id} className='border rounded p-2 flex items-center'>
-                                                        <img src={property.imgUrl} alt={property.name} className='w-16 h-16 object-cover rounded mr-4' />
-                                                        <div>
-                                                            <p className='font-medium'>{property.name}</p>
-                                                            <p className='text-sm text-gray-600'>{property.address}</p>
-                                                            <p className='text-sm text-gray-600'>Price: {Web3.utils.fromWei(property.pricePerDay, 'ether')} ETH/night</p>
-                                                            <p className='text-sm text-gray-600'>Status: {property.isBooked ? 'Booked' : 'Available'}</p>
-                                                            {property.isBooked && (
-                                                                <div className='mt-2'>
-                                                                    <p className='text-sm text-gray-600 mb-1'>Guest: {truncateAddress(property.guest)}</p>
-                                                                    <div className='flex items-center space-x-2'>
-                                                                        <ClipboardIcon
-                                                                            onClick={(event) => copyToClipboard(property.guest, event)}
-                                                                            className='w-5 h-5 text-gray-600 cursor-pointer hover:text-gray-800'
-                                                                        />
-                                                                        <img
-                                                                            src={DmailIcon.src}
-                                                                            alt="Dmail"
-                                                                            className="w-5 h-5 cursor-pointer hover:opacity-80"
-                                                                            onClick={(event) => handleIconClick(event, 'https://mail.dmail.ai/compose')}
-                                                                        />
-                                                                        <img
-                                                                            src={ZkBridgeIcon.src}
-                                                                            alt="zkBridge"
-                                                                            className="w-5 h-5 cursor-pointer hover:opacity-80"
-                                                                            onClick={(event) => handleIconClick(event, 'https://www.zkbridge.com/zkmessenger')}
-                                                                        />
+                                                myListings.map((property) => {
+                                                    let propStatus = 'Available'
+                                                    if (property.isBooked) {
+                                                        propStatus = 'Booked'
+                                                    } if (!property.isActive) {
+                                                        propStatus = 'Inactive'
+                                                    }
+
+                                                    return (
+                                                        <li key={property.id} className='border rounded p-2 flex items-center'>
+                                                            <img src={property.imgUrl} alt={property.name} className='w-16 h-16 object-cover rounded mr-4' />
+                                                            <div>
+                                                                <p className='font-medium'>{property.name}</p>
+                                                                <p className='text-sm text-gray-600'>{property.address}</p>
+                                                                <p className='text-sm text-gray-600'>Price: {Web3.utils.fromWei(property.pricePerDay, 'ether')} ETH/night</p>
+                                                                <p className='text-sm text-gray-600'>Status: {propStatus}</p>
+                                                                {property.isBooked && (
+                                                                    <div className='mt-2'>
+                                                                        <p className='text-sm text-gray-600 mb-1'>Guest: {truncateAddress(property.guest)}</p>
+                                                                        <div className='flex items-center space-x-2'>
+                                                                            <ClipboardIcon
+                                                                                onClick={(event) => copyToClipboard(property.guest, event)}
+                                                                                className='w-5 h-5 text-gray-600 cursor-pointer hover:text-gray-800'
+                                                                            />
+                                                                            <img
+                                                                                src={DmailIcon.src}
+                                                                                alt="Dmail"
+                                                                                className="w-5 h-5 cursor-pointer hover:opacity-80"
+                                                                                onClick={(event) => handleIconClick(event, 'https://mail.dmail.ai/compose')}
+                                                                            />
+                                                                            <img
+                                                                                src={ZkBridgeIcon.src}
+                                                                                alt="zkBridge"
+                                                                                className="w-5 h-5 cursor-pointer hover:opacity-80"
+                                                                                onClick={(event) => handleIconClick(event, 'https://www.zkbridge.com/zkmessenger')}
+                                                                            />
+                                                                        </div>
                                                                     </div>
-                                                                </div>
-                                                            )}
-                                                        </div>
-                                                    </li>
-                                                ))
+                                                                )}
+                                                            </div>
+                                                        </li>
+                                                    )
+                                                })
                                             ) : (
                                                 <p>No listings found.</p>
                                             )}
