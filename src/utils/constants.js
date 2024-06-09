@@ -1,7 +1,7 @@
 import ContractABI from './abi.json'
 import Web3 from 'web3'
 
-export const address = '0xD6ea3169b54224c3955D097562c9Eec326898274'
+export const address = '0x99d63A79aE592942367a7A42df92f7784618cf19'
 
 export const createContract = () => {
   const { ethereum } = window
